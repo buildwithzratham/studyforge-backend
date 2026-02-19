@@ -27,7 +27,7 @@ app.post("/chat", async (req, res) => {
     }
 
     const response = await cohere.chat({
-      model: "command",
+      model: "command-r",
       messages: [
         {
           role: "user",
