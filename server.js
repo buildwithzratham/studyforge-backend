@@ -9,6 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root route
 app.get("/", (req, res) => {
   res.send("StudyForge backend running 🚀");
 });
@@ -25,24 +26,22 @@ app.post("/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-   const response = await cohere.chat({
-  model: "command",
-  messages: [
-    {
-      role: "user",
-      content: message,
-    },
-  ],
-});
-
+    const response = await cohere.chat({
+      model: "command",
+      messages: [
+        {
+          role: "user",
+          content: message,
+        },
+      ],
+    });
 
     res.json({
       reply: response.message.content[0].text,
-,
     });
 
   } catch (error) {
-    console.error("Cohere Error:", error);
+    console.error("Cohere Error:", error.response?.data || error.message);
     res.status(500).json({ error: error.message });
   }
 });
