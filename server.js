@@ -27,7 +27,7 @@ app.post("/chat", async (req, res) => {
     }
 
     const response = await cohere.chat({
-      model: "command-r",
+      model: "command-r-plus",
       message: message,
     });
 
