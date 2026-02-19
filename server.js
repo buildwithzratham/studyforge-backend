@@ -45,20 +45,35 @@ app.post("/chat", authMiddleware, async (req, res) => {
       return res.status(403).json({ error: "No credits left" });
     }
 
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
-      messages: [
-        { role: "user", content: message }
-      ],
-    });
 
-    const reply = completion.choices[0]?.message?.content || "";
+// Add new user message
+user.messages.push({ role: "user", content: message });
 
-    // 🔥 reduce credits
-    user.credits -= 1;
-    await user.save();
+// Keep only last 5 messages
+if (user.messages.length > 5) {
+  user.messages = user.messages.slice(-5);
+}
 
-    res.json({ reply, credits: user.credits });
+const completion = await groq.chat.completions.create({
+  model: "llama-3.1-8b-instant",
+  messages: user.messages
+});
+
+const reply = completion.choices[0]?.message?.content || "";
+
+// Save AI reply
+user.messages.push({ role: "assistant", content: reply });
+
+// Reduce credits
+user.credits -= 1;
+
+await user.save();
+
+res.json({
+  reply,
+  credits: user.credits
+});
+
 
   } catch (error) {
     console.error(error);
