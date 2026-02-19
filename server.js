@@ -9,12 +9,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Root route (test)
 app.get("/", (req, res) => {
   res.send("StudyForge backend running 🚀");
 });
-
-
 
 const cohere = new CohereClient({
   token: process.env.COHERE_API_KEY,
@@ -29,7 +26,7 @@ app.post("/chat", async (req, res) => {
     }
 
     const response = await cohere.chat({
-      model: "command-r",
+      model: "command-r-plus",
       message: message,
     });
 
@@ -37,11 +34,12 @@ app.post("/chat", async (req, res) => {
       reply: response.text,
     });
 
-} catch (error) {
-  console.error("Cohere Error:", error.response?.data || error.message);
-  res.status(500).json({ error: error.message });
-}
-  
+  } catch (error) {
+    console.error("Cohere Error:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
