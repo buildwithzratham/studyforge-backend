@@ -27,13 +27,19 @@ app.post("/chat", async (req, res) => {
     }
 
     const response = await cohere.chat({
-      model: "command",
-      message: message,
-    });
+  model: "command-a-03-2025",
+  messages: [
+    {
+      role: "user",
+      content: message,
+    },
+  ],
+});
 
-    res.json({
-      reply: response.text,
-    });
+res.json({
+  reply: response.message.content[0].text,
+});
+
 
   } catch (error) {
     console.error("Cohere Error:", error);
