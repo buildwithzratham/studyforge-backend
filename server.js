@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { CohereClient } from "cohere-ai";
+import Groq from "groq-sdk";
 
 dotenv.config();
 
@@ -9,43 +9,41 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const cohere = new CohereClient({
-  token: process.env.COHERE_API_KEY,
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
 });
 
-// Root route
 app.get("/", (req, res) => {
-  res.send("StudyForge backend running 🚀");
+  res.send("Studyforge backend running 🚀");
 });
 
 app.post("/chat", async (req, res) => {
   try {
-    console.log("Incoming body:", req.body);
-
     if (!req.body || !req.body.message) {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    const userMessage = req.body.message;
-
-   const response = await cohere.chat({
-  model: "command-r",
-  message: userMessage,
-});
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "user",
+          content: req.body.message,
+        },
+      ],
+    });
 
     res.json({
-      reply: response.text,
+      reply: completion.choices[0].message.content,
     });
 
   } catch (error) {
-    console.error("Cohere FULL error:", error);
+    console.error("Groq error:", error);
     res.status(500).json({ error: error.message });
   }
 });
 
 const PORT = process.env.PORT || 10000;
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
