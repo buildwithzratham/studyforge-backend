@@ -1,14 +1,21 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { groq } from "@ai-sdk/groq";
-import { generateText } from "ai";
+import Groq from "groq-sdk";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
+
+app.get("/", (req, res) => {
+  res.send("StudyForge backend running 🚀");
+});
 
 app.post("/chat", async (req, res) => {
   try {
@@ -18,12 +25,16 @@ app.post("/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    const { text } = await generateText({
-      model: groq("llama-3.1-8b-instant"),
-      prompt: message,
+    const completion = await groq.chat.completions.create({
+      model: "llama3-8b-8192",
+      messages: [
+        { role: "user", content: message }
+      ],
     });
 
-    res.json({ reply: text });
+    const reply = completion.choices[0]?.message?.content || "";
+
+    res.json({ reply });
 
   } catch (error) {
     console.error(error);
@@ -31,11 +42,7 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("StudyForge AI Backend Running");
-});
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  console.log(`Server running on port ${PORT}`);
 });
