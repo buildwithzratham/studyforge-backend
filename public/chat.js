@@ -71,5 +71,9 @@ document.getElementById("creditsBox").innerText =
   "Credits: " + data.credits;
 
     document.getElementById("typing").remove();
-
-  }
+    
+} catch (err) {
+    console.error(err);
+    document.getElementById("typing")?.remove();
+    chatBox.innerHTML += `<div class="message ai">Server error</div>`;
+}
