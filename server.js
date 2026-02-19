@@ -5,8 +5,12 @@ import Groq from "groq-sdk";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import User from "./models/User.js";
 
 dotenv.config();
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log("Mongo Error:", err));
 
 const app = express();
 app.use(cors());
@@ -74,6 +78,26 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 });
+
+app.post("/register", async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    const hashed = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      username,
+      email,
+      password: hashed
+    });
+
+    res.json({ message: "User created" });
+
+  } catch (err) {
+    res.status(500).json({ error: "Register failed" });
+  }
+});
+
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
