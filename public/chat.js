@@ -19,6 +19,20 @@ function logout() {
 function toggleTheme() {
   document.body.classList.toggle("light");
 }
+function typeText(element, text, speed = 20) {
+  element.innerHTML = "";
+  let i = 0;
+
+  function typing() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    }
+  }
+
+  typing();
+}
 
 async function sendMessage() {
   const input = document.getElementById("messageInput");
@@ -45,22 +59,17 @@ async function sendMessage() {
       body: JSON.stringify({ message })
     });
 
-    const data = await res.json();
+   const data = await res.json();
+
+const aiMessage = document.createElement("div");
+aiMessage.className = "message assistant";
+document.getElementById("chatBox").appendChild(aiMessage);
+
+typeText(aiMessage, data.reply);
+
 document.getElementById("creditsBox").innerText =
   "Credits: " + data.credits;
 
     document.getElementById("typing").remove();
 
-    if (res.ok) {
-      chatBox.innerHTML += `<div class="message ai">${data.reply}</div>`;
-    } else {
-      chatBox.innerHTML += `<div class="message ai">${data.error}</div>`;
-    }
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-  } catch (err) {
-    document.getElementById("typing").remove();
-    chatBox.innerHTML += `<div class="message ai">Server error</div>`;
-  }
-}
