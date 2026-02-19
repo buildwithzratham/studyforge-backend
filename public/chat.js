@@ -72,4 +72,4 @@ document.getElementById("creditsBox").innerText =
 
     document.getElementById("typing").remove();
 
-
+  }
