@@ -16,6 +16,7 @@ async function login() {
     if (res.ok) {
       // Save token in browser
       localStorage.setItem("token", data.token);
+window.location.href = "/chat.html";
 
       // Go to chat page
       window.location.href = "/chat.html";
