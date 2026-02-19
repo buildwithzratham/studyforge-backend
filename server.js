@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import Groq from "groq-sdk";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -40,6 +42,36 @@ app.post("/chat", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "AI failed" });
+  }
+});
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1️⃣ Find user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    // 2️⃣ Compare password
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).json({ error: "Wrong password" });
+    }
+
+    // 3️⃣ Create token
+    const token = jwt.sign(
+      { id: user._id }, 
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // 4️⃣ Send token
+    res.json({ token });
+
+  } catch (error) {
+    res.status(500).json({ error: "Login failed" });
   }
 });
 
