@@ -16,6 +16,7 @@ mongoose.connect(process.env.MONGO_URI)
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
