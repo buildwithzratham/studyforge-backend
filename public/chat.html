@@ -1,20 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chat</title>
+  <title>StudyForge AI</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #0f172a;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    #chatBox {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .message {
+      margin-bottom: 15px;
+    }
+
+    .user {
+      text-align: right;
+      color: #38bdf8;
+    }
+
+    .ai {
+      text-align: left;
+      color: #22c55e;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 15px;
+      background: #1e293b;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      border-radius: 6px;
+      border: none;
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
+  <div id="chatBox"></div>
 
-  <h2>AI Chat</h2>
-
-  <input type="text" id="message" placeholder="Type message..." />
-  <button onclick="sendMessage()">Send</button>
-
-  <p id="reply"></p>
-  <p id="credits"></p>
+  <div class="input-area">
+    <input id="messageInput" placeholder="Ask something..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
 
   <script src="chat.js"></script>
-
 </body>
 </html>
 
