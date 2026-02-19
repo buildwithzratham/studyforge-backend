@@ -13,7 +13,12 @@ const userSchema = new mongoose.Schema({
   credits: {
     type: Number,
     default: 10
-  }
+  },
+  messages: {
+  type: Array,
+  default: []
+}
+
 });
 
 export default mongoose.model("User", userSchema);
