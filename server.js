@@ -25,13 +25,20 @@ app.post("/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    const response = await cohere.chat({
-      model: "command-r",
-      message: message,
-    });
+   const response = await cohere.chat({
+  model: "command",
+  messages: [
+    {
+      role: "user",
+      content: message,
+    },
+  ],
+});
+
 
     res.json({
-      reply: response.text,
+      reply: response.message.content[0].text,
+,
     });
 
   } catch (error) {
