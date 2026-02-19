@@ -3,10 +3,6 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true
-  },
-  email: {
-    type: String,
     required: true,
     unique: true
   },
@@ -14,18 +10,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-
-  // Free vs Pro system
-  isPro: {
-    type: Boolean,
-    default: false
-  },
-
-  // Usage limit system
-  usage: {
+  credits: {
     type: Number,
-    default: 0
+    default: 10
   }
-}, { timestamps: true });
+});
 
 export default mongoose.model("User", userSchema);
