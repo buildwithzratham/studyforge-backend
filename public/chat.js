@@ -46,6 +46,8 @@ async function sendMessage() {
     });
 
     const data = await res.json();
+document.getElementById("creditsBox").innerText =
+  "Credits: " + data.credits;
 
     document.getElementById("typing").remove();
 
