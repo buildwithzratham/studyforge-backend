@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
   res.send("StudyForge backend running 🚀");
 });
 
-app.post("/chat", async (req, res) => {
+app.post("/chat", authMiddleware, async (req, res) => {
   try {
     const { message } = req.body;
 
