@@ -76,4 +76,5 @@ document.getElementById("creditsBox").innerText =
     console.error(err);
     document.getElementById("typing")?.remove();
     chatBox.innerHTML += `<div class="message ai">Server error</div>`;
+   }
 }
