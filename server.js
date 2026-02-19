@@ -19,14 +19,14 @@ app.post("/chat", async (req, res) => {
     }
 
     const { text } = await generateText({
-     model: groq("llama-3.1-8b-instant"),
+      model: groq("llama-3.1-8b-instant"),
       prompt: message,
     });
 
     res.json({ reply: text });
 
   } catch (error) {
-    console.error("AI ERROR:", error);
+    console.error(error);
     res.status(500).json({ error: "AI failed" });
   }
 });
