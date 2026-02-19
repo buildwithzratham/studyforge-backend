@@ -29,7 +29,7 @@ app.post("/chat", async (req, res) => {
     }
 
     const response = await cohere.chat({
-      model: "command-r-plus",
+      model: "command-r",
       message: message,
     });
 
@@ -37,12 +37,11 @@ app.post("/chat", async (req, res) => {
       reply: response.text,
     });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "AI failed" });
-  }
-});
-
+} catch (error) {
+  console.error("Cohere Error:", error.response?.data || error.message);
+  res.status(500).json({ error: error.message });
+}
+  
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
