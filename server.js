@@ -20,8 +20,7 @@ app.get("/", (req, res) => {
 
 app.post("/chat", async (req, res) => {
   try {
-
-    console.log(req.body);
+    console.log("Incoming body:", req.body);
 
     const { message } = req.body;
 
@@ -30,22 +29,21 @@ app.post("/chat", async (req, res) => {
     }
 
     const response = await cohere.chat({
-  model: "command-a-03-2025",
-  messages: [
-    {
-      role: "user",
-      content: message,
-    },
-  ],
-});
+      model: "command-r",
+      messages: [
+        {
+          role: "user",
+          content: message
+        }
+      ]
+    });
 
-res.json({
-  reply: response.message.content[0].text,
-});
-
+    res.json({
+      reply: response.message.content[0].text
+    });
 
   } catch (error) {
-    console.error("Cohere Error:", error);
+    console.error("Cohere error:", error);
     res.status(500).json({ error: error.message });
   }
 });
