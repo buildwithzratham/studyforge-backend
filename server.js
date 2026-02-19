@@ -33,6 +33,17 @@ app.post("/chat", authMiddleware, async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
+    // 🔥 STEP 2 GOES HERE
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (user.credits <= 0) {
+      return res.status(403).json({ error: "No credits left" });
+    }
+
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
       messages: [
@@ -42,13 +53,19 @@ app.post("/chat", authMiddleware, async (req, res) => {
 
     const reply = completion.choices[0]?.message?.content || "";
 
-    res.json({ reply });
+    // 🔥 reduce credits
+    user.credits -= 1;
+    await user.save();
+
+    res.json({ reply, credits: user.credits });
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "AI failed" });
   }
 });
+
+   
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
