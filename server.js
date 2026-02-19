@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import User from "./models/User.js";
+import { authMiddleware } from "./middleware/auth.js";
 
 dotenv.config();
 mongoose.connect(process.env.MONGO_URI)
