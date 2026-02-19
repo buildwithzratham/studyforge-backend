@@ -11,6 +11,20 @@
       background: #0f172a;
       color: white;
       font-family: Arial, sans-serif;
+      transition: 0.3s;
+    }
+
+    body.light {
+      background: #f1f5f9;
+      color: black;
+    }
+
+    header {
+      padding: 10px 20px;
+      background: #1e293b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     #chatBox {
@@ -55,10 +69,19 @@
       color: white;
       cursor: pointer;
     }
+
   </style>
 </head>
 
 <body>
+  <header>
+    <div>StudyForge AI</div>
+    <div>
+      <button onclick="toggleTheme()">Theme</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </header>
+
   <div id="chatBox"></div>
 
   <div class="input-area">
@@ -69,4 +92,3 @@
   <script src="chat.js"></script>
 </body>
 </html>
-
