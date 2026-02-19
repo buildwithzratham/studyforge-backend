@@ -1,20 +1,41 @@
-async function sendMessage() {
-  const message = document.getElementById("message").value;
-  const token = localStorage.getItem("token");
+// Check if logged in
+const token = localStorage.getItem("token");
 
-  const res = await fetch("https://studyforge-backend-bjlh.onrender.com/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({ message })
-  });
-
-  const data = await res.json();
-
-  document.getElementById("reply").innerText = data.reply;
-  document.getElementById("credits").innerText = 
-    "Credits left: " + data.credits;
+if (!token) {
+  window.location.href = "/login.html";
 }
 
+async function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const message = input.value;
+
+  if (!message) return;
+
+  const chatBox = document.getElementById("chatBox");
+
+  chatBox.innerHTML += `<div class="message user">${message}</div>`;
+  input.value = "";
+
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      chatBox.innerHTML += `<div class="message ai">${data.reply}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    } else {
+      chatBox.innerHTML += `<div class="message ai">${data.error}</div>`;
+    }
+
+  } catch (err) {
+    chatBox.innerHTML += `<div class="message ai">Server error</div>`;
+  }
+}
