@@ -20,6 +20,9 @@ app.get("/", (req, res) => {
 
 app.post("/chat", async (req, res) => {
   try {
+
+    console.log(req.body);
+
     const { message } = req.body;
 
     if (!message) {
