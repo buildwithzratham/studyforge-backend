@@ -6,34 +6,32 @@
 </head>
 <body>
 
-<div class="layout">
+<div class="app">
 
-  <!-- Sidebar -->
+  <!-- SIDEBAR -->
   <div class="sidebar">
     <h2>StudyForge</h2>
+
+    <div class="credits-box">
+      Credits: <span id="credits">0</span>
+    </div>
+
+    <button class="premium-btn">✨ Go Premium</button>
     <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- Chat Area -->
-  <div class="chat-container">
-
+  <!-- CHAT AREA -->
+  <div class="chat-area">
     <div id="messages" class="messages"></div>
 
-    <div class="input-area">
-      <input 
-        type="text" 
-        id="messageInput" 
-        placeholder="Ask anything..."
-        onkeydown="handleEnter(event)"
-      />
+    <div class="input-box">
+      <input id="input" placeholder="Ask anything..." />
       <button onclick="sendMessage()">Send</button>
     </div>
-
   </div>
 
 </div>
 
 <script src="chat.js"></script>
-
 </body>
 </html>
