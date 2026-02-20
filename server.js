@@ -68,6 +68,7 @@ app.post("/chat", authMiddleware, async (req, res) => {
 
     user.messages.push({ role: "assistant", content: fullReply });
     user.credits -= 1;
+    user.totalMessages += 1;
     await user.save();
 
     res.end();
