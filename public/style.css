@@ -1,17 +1,18 @@
+/* RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
+/* Animated Background */
 body {
   height: 100vh;
-  display: flex;
-  background: linear-gradient(-45deg, #1f1c2c, #302b63, #24243e, #0f2027);
+  background: linear-gradient(-45deg, #1e1e2f, #2c2c54, #1f4068, #16213e);
   background-size: 400% 400%;
-  animation: gradientBG 12s ease infinite;
-  color: white;
+  animation: gradientBG 15s ease infinite;
+  display: flex;
 }
 
 @keyframes gradientBG {
@@ -20,80 +21,148 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+/* Layout */
+.app {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* SIDEBAR */
 .sidebar {
   width: 260px;
   padding: 25px;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(15px);
   background: rgba(255, 255, 255, 0.08);
-  border-right: 1px solid rgba(255,255,255,0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.sidebar h2 {
-  margin-bottom: 20px;
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
 }
 
-.sidebar button {
-  width: 100%;
+.credits-box {
+  padding: 15px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  text-align: center;
+}
+
+#credits {
+  font-size: 22px;
+  font-weight: bold;
+  color: #00f5ff;
+}
+
+/* Premium Button */
+.premium-btn {
   padding: 12px;
   border: none;
   border-radius: 10px;
-  margin-top: 15px;
-  cursor: pointer;
-  background: linear-gradient(135deg, #7f5af0, #2cb67d);
+  background: linear-gradient(45deg, #ff00cc, #3333ff);
   color: white;
-  font-weight: 600;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-.chat-container {
+.premium-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 0, 204, 0.6);
+}
+
+.logout-btn {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+/* CHAT AREA */
+.chat-area {
   flex: 1;
   display: flex;
   flex-direction: column;
-  backdrop-filter: blur(30px);
-  background: rgba(255,255,255,0.05);
+  padding: 25px;
 }
 
-#messages {
+.messages {
   flex: 1;
-  padding: 30px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 10px;
 }
 
+/* Messages */
 .message {
-  max-width: 70%;
-  padding: 14px 18px;
-  margin-bottom: 15px;
-  border-radius: 16px;
+  max-width: 65%;
+  padding: 12px 18px;
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.1);
+  color: white;
   animation: fadeIn 0.3s ease;
 }
 
 .user {
   align-self: flex-end;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: linear-gradient(45deg, #3a86ff, #4361ee);
 }
 
 .assistant {
   align-self: flex-start;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px);
-}
-
-.input-area {
-  padding: 20px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-input {
-  width: 100%;
-  padding: 15px;
-  border-radius: 30px;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  background: rgba(255,255,255,0.1);
-  color: white;
+  background: rgba(255,255,255,0.15);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* INPUT AREA */
+.input-box {
+  display: flex;
+  margin-top: 15px;
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.08);
+  padding: 10px;
+  border-radius: 14px;
+}
+
+.input-box input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  outline: none;
+}
+
+.input-box button {
+  margin-left: 10px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  background: #00f5ff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
 }
