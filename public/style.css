@@ -40,13 +40,14 @@ body{
   max-width:75%;
 }
 
-.user{
-  background:#007aff;
-  align-self:flex-end;
+.user {
+  background: linear-gradient(135deg,#007aff,#0051ff);
 }
 
-.assistant{
-  background:rgba(255,255,255,0.2);
+.assistant {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
 }
 
 .inputbar{
