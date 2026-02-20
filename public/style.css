@@ -108,3 +108,18 @@ button{
     opacity: 1;
   }
 }
+
+.copy-btn {
+  margin-top: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
