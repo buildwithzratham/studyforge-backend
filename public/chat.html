@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>StudyForge AI</title>
+  <title>StudyForge</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="app">
+<div class="layout">
 
+  <!-- Sidebar -->
   <div class="sidebar">
     <h2>StudyForge</h2>
     <button onclick="logout()">Logout</button>
   </div>
 
+  <!-- Chat Area -->
   <div class="chat-container">
+
     <div id="messages" class="messages"></div>
 
     <div class="input-area">
-      <input type="text" id="messageInput" placeholder="Ask anything..." />
+      <input 
+        type="text" 
+        id="messageInput" 
+        placeholder="Ask anything..."
+        onkeydown="handleEnter(event)"
+      />
       <button onclick="sendMessage()">Send</button>
     </div>
+
   </div>
 
 </div>
 
 <script src="chat.js"></script>
+
 </body>
 </html>
