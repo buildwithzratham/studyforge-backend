@@ -141,3 +141,13 @@ pre {
 code {
   color: #2cb67d;
 }
+
+.copy-btn {
+  background: #2cb67d;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 5px;
+}
