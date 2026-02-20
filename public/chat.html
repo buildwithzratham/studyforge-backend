@@ -1,41 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>StudyForge</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyForge</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<div class="app">
+  <div class="chat-container">
 
-  <div class="sidebar">
-    <h1>StudyForge</h1>
-
-    <button onclick="newChat()">+ New Chat</button>
-
-    <div class="credits">
-      Credits: <span id="credits">0</span>
+    <div class="top-bar">
+      <h1>StudyForge</h1>
+      <button onclick="logout()">Logout</button>
     </div>
-
-    <button onclick="logout()">Logout</button>
-  </div>
-
-  <div class="main">
 
     <div id="messages" class="messages"></div>
 
-    <div class="input-container">
-      <input id="messageInput" placeholder="Ask anything..." />
+    <div class="input-bar">
+      <input 
+        id="messageInput" 
+        placeholder="Ask anything..." 
+        onkeypress="if(event.key==='Enter') sendMessage()"
+      />
       <button onclick="sendMessage()">Send</button>
     </div>
 
   </div>
 
-</div>
-
-<script src="chat.js"></script>
+  <script src="chat.js"></script>
 </body>
 </html>
