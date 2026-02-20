@@ -114,6 +114,13 @@ function logout() {
   window.location.href = "/login.html";
 }
 
+/* ============== NEW CHAT ============== */
+function newChat() {
+  document.getElementById("messages").innerHTML = "";
+}
+
+/* ============== INIT ============== */
+loadChats();
 /* ================= INIT ================= */
 
 loadChats();
