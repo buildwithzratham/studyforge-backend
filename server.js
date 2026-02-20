@@ -10,186 +10,109 @@ import { authMiddleware } from "./middleware/auth.js";
 
 dotenv.config();
 
-/* ================= ENV CHECK ================= */
-if (!process.env.MONGO_URI) {
-  console.error("❌ MONGO_URI missing in environment");
-  process.exit(1);
-}
-if (!process.env.GROQ_API_KEY) {
-  console.error("❌ GROQ_API_KEY missing in environment");
-  process.exit(1);
-}
-if (!process.env.JWT_SECRET) {
-  console.error("❌ JWT_SECRET missing in environment");
-  process.exit(1);
-}
-
-/* ================= MONGO ================= */
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => {
-    console.error("❌ Mongo Error:", err);
-    process.exit(1);
-  });
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log("Mongo Error:", err));
 
-/* ================= APP ================= */
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-/* ================= GROQ ================= */
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
+  apiKey: process.env.GROQ_API_KEY
 });
 
-/* ================= ROOT ================= */
 app.get("/", (req, res) => {
   res.send("StudyForge backend running 🚀");
 });
 
-/* ================= CHAT ================= */
-app.post("/chat", authMiddleware, async (req, res) => {
-  try {
-    const { message } = req.body;
-
-    if (!message || message.trim() === "") {
-      return res.status(400).json({ error: "Message required" });
-    }
-
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    if (user.credits <= 0) {
-      return res.status(403).json({ error: "No credits left" });
-    }
-
-    // Save user message
-    user.messages.push({ role: "user", content: message });
-
-    // Limit memory
-    if (user.messages.length > 10) {
-      user.messages = user.messages.slice(-10);
-    }
-
-    /* ===== GROQ REQUEST ===== */
-    // Remove Mongo _id fields before sending to Groq
-const cleanMessages = user.messages.map(msg => ({
-  role: msg.role,
-  content: msg.content
-}));
-
-const completion = await groq.chat.completions.create({
-  model: "llama-3.1-8b-instant",
-  messages: cleanMessages,
-  temperature: 0.7,
+/* ================= NEW CHAT ================= */
+app.post("/new-chat", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const newChat = { title: "New Chat", messages: [] };
+  user.conversations.push(newChat);
+  await user.save();
+  res.json(user.conversations);
 });
 
-    const reply =
-      completion.choices?.[0]?.message?.content || "No response from AI";
+/* ================= GET ALL CHATS ================= */
+app.get("/chats", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  res.json(user.conversations);
+});
 
-    // Save assistant reply
-    user.messages.push({ role: "assistant", content: reply });
+/* ================= CHAT MESSAGE ================= */
+app.post("/chat/:id", authMiddleware, async (req, res) => {
+  try {
+    const { message } = req.body;
+    const { id } = req.params;
+
+    const user = await User.findById(req.user.id);
+    const chat = user.conversations.id(id);
+
+    if (!chat) return res.status(404).json({ error: "Chat not found" });
+    if (user.credits <= 0) return res.status(403).json({ error: "No credits" });
+
+    chat.messages.push({ role: "user", content: message });
+
+    const cleanMessages = chat.messages.map(m => ({
+      role: m.role,
+      content: m.content
+    }));
+
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: cleanMessages
+    });
+
+    const reply =
+      completion.choices?.[0]?.message?.content || "No response";
+
+    chat.messages.push({ role: "assistant", content: reply });
 
     user.credits -= 1;
     await user.save();
 
-    return res.json({
-      reply,
-      credits: user.credits,
-    });
+    res.json({ reply, credits: user.credits });
 
   } catch (err) {
-    console.error("🔥 CHAT ERROR:", err.message);
-    return res.status(500).json({
-      error: "AI failed",
-      details: err.message,
-    });
+    console.error(err);
+    res.status(500).json({ error: "AI failed" });
   }
 });
 
-/* ================= HISTORY ================= */
-app.get("/history", authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    res.json({
-      messages: user.messages || [],
-      credits: user.credits || 0,
-    });
-
-  } catch (err) {
-    console.error("🔥 HISTORY ERROR:", err.message);
-    res.status(500).json({ error: "Failed to load history" });
-  }
-});
-
-/* ================= REGISTER ================= */
+/* ================= AUTH ================= */
 app.post("/register", async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
+  const { username, email, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
 
-    if (!username || !email || !password) {
-      return res.status(400).json({ error: "All fields required" });
-    }
+  await User.create({
+    username,
+    email,
+    password: hashed
+  });
 
-    const existing = await User.findOne({ email });
-    if (existing) {
-      return res.status(400).json({ error: "Email already exists" });
-    }
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    await User.create({
-      username,
-      email,
-      password: hashed,
-    });
-
-    res.json({ message: "User created successfully" });
-
-  } catch (err) {
-    console.error("🔥 REGISTER ERROR:", err.message);
-    res.status(500).json({ error: "Register failed" });
-  }
+  res.json({ message: "User created" });
 });
 
-/* ================= LOGIN ================= */
 app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
-    }
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ error: "User not found" });
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(400).json({ error: "Wrong password" });
-    }
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) return res.status(400).json({ error: "Wrong password" });
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+  const token = jwt.sign(
+    { id: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
 
-    res.json({ token });
-
-  } catch (err) {
-    console.error("🔥 LOGIN ERROR:", err.message);
-    res.status(500).json({ error: "Login failed" });
-  }
+  res.json({ token });
 });
 
-/* ================= START ================= */
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
