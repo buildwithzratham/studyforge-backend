@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #1e293b, #0f172a);
+  font-family: Arial;
+  background: #111;
   color: white;
 }
 
@@ -12,9 +12,13 @@ body {
 
 .sidebar {
   width: 250px;
+  background: #1c1c1c;
   padding: 20px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(15px);
+}
+
+.sidebar button {
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .main {
@@ -30,10 +34,10 @@ body {
 }
 
 .message {
-  max-width: 70%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 14px;
+  max-width: 600px;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 12px;
 }
 
 .user {
@@ -42,46 +46,20 @@ body {
 }
 
 .assistant {
-  background: rgba(255,255,255,0.08);
+  background: #333;
 }
 
 .input-box {
   display: flex;
-  padding: 15px;
-  gap: 10px;
+  padding: 10px;
+  background: #1c1c1c;
 }
 
 .input-box input {
   flex: 1;
   padding: 10px;
-  border-radius: 10px;
-  border: none;
 }
 
 .input-box button {
   padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  background: #10b981;
-  color: white;
-  cursor: pointer;
-}
-
-pre {
-  background: #0f172a;
-  padding: 15px;
-  border-radius: 10px;
-  position: relative;
-}
-
-.copy-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #10b981;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
 }
