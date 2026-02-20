@@ -1,69 +1,53 @@
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "/login.html";
 
-/* ===== LOAD HISTORY ===== */
-async function loadHistory() {
-  const res = await fetch("/history", {
+let currentChatId = null;
+
+async function loadChats() {
+  const res = await fetch("/chats", {
     headers: { Authorization: "Bearer " + token }
   });
 
-  const data = await res.json();
+  const chats = await res.json();
+  const chatList = document.getElementById("chatList");
+  chatList.innerHTML = "";
 
-  if (res.ok) {
-    document.getElementById("credits").innerText = data.credits;
-    const messagesDiv = document.getElementById("messages");
-    messagesDiv.innerHTML = "";
+  chats.forEach(chat => {
+    const div = document.createElement("div");
+    div.innerText = chat.title;
+    div.onclick = () => selectChat(chat._id);
+    chatList.appendChild(div);
+  });
 
-    data.messages.forEach(msg => {
-      addMessage(msg.role, msg.content);
-    });
+  if (chats.length > 0) {
+    selectChat(chats[0]._id);
   }
 }
 
-/* ===== ADD MESSAGE ===== */
-function addMessage(role, text) {
-  const div = document.createElement("div");
-  div.classList.add("message", role);
-  div.innerHTML = marked.parse(text);
+async function createNewChat() {
+  const res = await fetch("/new-chat", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + token }
+  });
 
-  document.getElementById("messages").appendChild(div);
-  div.scrollIntoView({ behavior: "smooth" });
-
-  addCopyButtons();
+  const chats = await res.json();
+  loadChats();
 }
 
-/* ===== TYPING EFFECT ===== */
-function typeMessage(text) {
-  const div = document.createElement("div");
-  div.classList.add("message", "assistant");
-  document.getElementById("messages").appendChild(div);
-
-  let i = 0;
-  const speed = 15;
-
-  function typing() {
-    if (i < text.length) {
-      div.innerHTML = marked.parse(text.slice(0, i));
-      i++;
-      setTimeout(typing, speed);
-    } else {
-      addCopyButtons();
-    }
-  }
-
-  typing();
+function selectChat(id) {
+  currentChatId = id;
+  document.getElementById("messages").innerHTML = "";
 }
 
-/* ===== SEND MESSAGE ===== */
 async function sendMessage() {
   const input = document.getElementById("messageInput");
   const message = input.value.trim();
-  if (!message) return;
+  if (!message || !currentChatId) return;
 
   addMessage("user", message);
   input.value = "";
 
-  const res = await fetch("/chat", {
+  const res = await fetch(`/chat/${currentChatId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -75,41 +59,24 @@ async function sendMessage() {
   const data = await res.json();
 
   if (res.ok) {
-    typeMessage(data.reply);
+    addMessage("assistant", data.reply);
     document.getElementById("credits").innerText = data.credits;
   } else {
     alert(data.error);
   }
 }
 
-/* ===== ENTER KEY ===== */
-function handleEnter(e) {
-  if (e.key === "Enter") sendMessage();
+function addMessage(role, text) {
+  const div = document.createElement("div");
+  div.className = "message " + role;
+  div.innerText = text;
+  document.getElementById("messages").appendChild(div);
+  div.scrollIntoView();
 }
 
-/* ===== LOGOUT ===== */
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "/login.html";
 }
 
-/* ===== COPY BUTTON ===== */
-function addCopyButtons() {
-  document.querySelectorAll("pre").forEach(block => {
-    if (block.querySelector(".copy-btn")) return;
-
-    const btn = document.createElement("button");
-    btn.innerText = "Copy";
-    btn.className = "copy-btn";
-
-    btn.onclick = () => {
-      navigator.clipboard.writeText(block.innerText);
-      btn.innerText = "Copied!";
-      setTimeout(() => btn.innerText = "Copy", 1500);
-    };
-
-    block.appendChild(btn);
-  });
-}
-
-loadHistory();
+loadChats();
