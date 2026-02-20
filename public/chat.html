@@ -8,29 +8,26 @@
 </head>
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <div class="header glass">
-      <div class="title">
-        <h1>StudyForge</h1>
-        <span id="credits">0</span>
-      </div>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+  <div class="topbar glass">
+    <h2>StudyForge</h2>
+    <div>
+      <span id="credits">0</span>
+      <button onclick="logout()">Logout</button>
     </div>
-
-    <div id="messages" class="messages"></div>
-
-    <div class="input-area glass">
-      <input 
-        id="messageInput"
-        placeholder="Ask anything..."
-        onkeypress="if(event.key==='Enter') sendMessage()"
-      />
-      <button onclick="sendMessage()">Send</button>
-    </div>
-
   </div>
 
-  <script src="chat.js"></script>
+  <div id="messages" class="messages"></div>
+
+  <div class="inputbar glass">
+    <input id="messageInput" placeholder="Ask anything..."
+      onkeypress="if(event.key==='Enter') sendMessage()" />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+</div>
+
+<script src="chat.js"></script>
 </body>
 </html>
