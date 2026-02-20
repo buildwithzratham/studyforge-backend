@@ -1,0 +1,17 @@
+<h2>Admin Panel</h2>
+<div id="userList"></div>
+
+<script>
+const token = localStorage.getItem("token");
+
+fetch("/admin/users", {
+  headers: {
+    Authorization: "Bearer " + token
+  }
+})
+.then(res => res.json())
+.then(data => {
+  document.getElementById("userList").innerHTML =
+    "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+});
+</script>
