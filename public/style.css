@@ -8,7 +8,7 @@
 body {
   height: 100vh;
   display: flex;
-  background: linear-gradient(-45deg, #1f1c2c, #302b63, #24243e, #0f2027);
+  background: linear-gradient(-45deg, #11c2c, #302b63, #24243e, #0f2027);
   background-size: 400% 400%;
   animation: gradientBG 12s ease infinite;
   color: white;
