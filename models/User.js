@@ -24,7 +24,11 @@ const userSchema = new mongoose.Schema({
       role: String,
       content: String
     }
-  ]
+  ],
+  premium: {
+    type: Boolean,
+    default: false
+  }
 });
 
 export default mongoose.model("User", userSchema);
