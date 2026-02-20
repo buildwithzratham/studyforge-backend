@@ -1,18 +1,18 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #343541;
+  background: #1e1e2f;
   color: white;
 }
 
-.app {
+.layout {
   display: flex;
   height: 100vh;
 }
 
 .sidebar {
   width: 220px;
-  background: #202123;
+  background: #151522;
   padding: 20px;
 }
 
@@ -23,7 +23,7 @@ body {
 .sidebar button {
   width: 100%;
   padding: 10px;
-  background: #444654;
+  background: #33334d;
   border: none;
   color: white;
   cursor: pointer;
@@ -42,42 +42,42 @@ body {
 }
 
 .message {
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border-radius: 10px;
   max-width: 70%;
 }
 
 .user {
-  background: #4e8cff;
+  background: #4e73df;
   align-self: flex-end;
 }
 
 .assistant {
-  background: #444654;
+  background: #2c2c3c;
   align-self: flex-start;
 }
 
 .input-area {
   display: flex;
   padding: 15px;
-  background: #40414f;
+  background: #151522;
 }
 
 .input-area input {
   flex: 1;
   padding: 10px;
+  border-radius: 20px;
   border: none;
-  border-radius: 6px;
+  outline: none;
 }
 
 .input-area button {
   margin-left: 10px;
   padding: 10px 20px;
+  border-radius: 20px;
   border: none;
-  border-radius: 6px;
-  background: #19c37d;
-  color: black;
-  font-weight: bold;
+  background: #4e73df;
+  color: white;
   cursor: pointer;
 }
