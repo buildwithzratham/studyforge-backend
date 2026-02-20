@@ -141,5 +141,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/admin/users", authMiddleware, async (req, res) => {
+
+  const currentUser = await User.findById(req.user.id);
+
+  if (!currentUser.isAdmin) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
+  const users = await User.find().select("-password");
+
+  res.json(users);
+});
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log("Server running on " + PORT));
