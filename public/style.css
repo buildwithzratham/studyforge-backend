@@ -1,9 +1,22 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #1e1e2f, #2c3e50);
+  background: linear-gradient(-45deg, #1e1e2f, #2c3e50, #121212, #1f2937);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
   color: white;
-  overflow: hidden;
+  transition: 0.3s;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+.light-mode {
+  background: #f2f2f2;
+  color: black;
 }
 
 .app {
@@ -14,65 +27,81 @@ body {
 /* SIDEBAR */
 
 .sidebar {
-  width: 250px;
-  padding: 20px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(15px);
-  border-right: 1px solid rgba(255,255,255,0.1);
+  width: 260px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.sidebar h2 {
-  margin-top: 0;
+.glass {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(255,255,255,0.2);
 }
 
 .credits-box {
-  margin: 20px 0;
-  padding: 10px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.15);
 }
 
 .premium-btn {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 12px;
   border: none;
-  border-radius: 10px;
   background: linear-gradient(45deg, #7f5af0, #2cb67d);
   color: white;
   cursor: pointer;
 }
 
-/* CHAT AREA */
+.toggle-btn {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
 
-.chat-area {
+/* MAIN */
+
+.main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 30px;
 }
 
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
+/* MESSAGE BUBBLES */
+
 .message {
-  max-width: 70%;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  border-radius: 15px;
+  max-width: 65%;
+  padding: 12px 16px;
+  border-radius: 20px;
+  font-size: 15px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .user {
-  background: #2563eb;
   align-self: flex-end;
+  background: #2563eb;
 }
 
 .assistant {
-  background: rgba(255,255,255,0.1);
   align-self: flex-start;
+  background: rgba(255,255,255,0.15);
 }
 
 /* INPUT */
@@ -80,18 +109,21 @@ body {
 .input-box {
   display: flex;
   gap: 10px;
+  padding: 15px;
+  border-radius: 15px;
 }
 
 .input-box input {
   flex: 1;
-  padding: 10px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 12px;
   border: none;
+  font-size: 15px;
 }
 
 .input-box button {
-  padding: 10px 15px;
-  border-radius: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
   border: none;
   background: #2cb67d;
   color: white;
