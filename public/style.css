@@ -1,83 +1,119 @@
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #1e1e2f;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(-45deg, #1e1e2f, #3a3a6a, #2b5876, #4e4376);
+  background-size: 400% 400%;
+  animation: gradientBG 12s ease infinite;
+  display: flex;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.app {
+  display: flex;
+  width: 100%;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
+  padding: 20px;
+  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.1);
+  border-right: 1px solid rgba(255,255,255,0.2);
   color: white;
 }
 
-.layout {
-  display: flex;
-  height: 100vh;
-}
-
-.sidebar {
-  width: 220px;
-  background: #151522;
-  padding: 20px;
-}
-
 .sidebar h2 {
-  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.credits-box {
+  background: rgba(255,255,255,0.15);
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.premium-btn {
+  background: linear-gradient(45deg, #ff00cc, #3333ff);
+  border: none;
+  padding: 10px;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .sidebar button {
   width: 100%;
   padding: 10px;
-  background: #33334d;
+  border-radius: 12px;
   border: none;
-  color: white;
+  margin-top: 10px;
   cursor: pointer;
 }
 
-.chat-container {
+/* CHAT AREA */
+.chat-area {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 20px;
 }
 
 .messages {
   flex: 1;
-  padding: 20px;
   overflow-y: auto;
+  margin-bottom: 15px;
 }
 
 .message {
-  margin-bottom: 15px;
-  padding: 10px 15px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  margin-bottom: 10px;
   max-width: 70%;
+  backdrop-filter: blur(10px);
 }
 
 .user {
-  background: #4e73df;
   align-self: flex-end;
-}
-
-.assistant {
-  background: #2c2c3c;
-  align-self: flex-start;
-}
-
-.input-area {
-  display: flex;
-  padding: 15px;
-  background: #151522;
-}
-
-.input-area input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-}
-
-.input-area button {
-  margin-left: 10px;
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  background: #4e73df;
+  background: rgba(0, 123, 255, 0.4);
   color: white;
-  cursor: pointer;
 }
+
+.bot {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* INPUT */
+.input-box {
+  display: flex;
+  gap: 10px;
+}
+
+.input-box input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 20px;
+  border: none;
+}
+
+.input-box button {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  }
