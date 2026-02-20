@@ -55,9 +55,20 @@ async function sendMessage() {
     return;
   }
 
-  const aiDiv = document.createElement("div");
-  aiDiv.classList.add("message", "assistant");
-  messagesDiv.appendChild(aiDiv);
+ // Create typing indicator
+const typingDiv = document.createElement("div");
+typingDiv.classList.add("message", "assistant");
+
+typingDiv.innerHTML = `
+  <div class="typing">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+`;
+
+messagesDiv.appendChild(typingDiv);
+messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
@@ -69,7 +80,7 @@ async function sendMessage() {
     if (done) break;
 
     fullReply += decoder.decode(value);
-    aiDiv.textContent = fullReply;
+    aiDiv.innerHTML = fullReply;
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
 
