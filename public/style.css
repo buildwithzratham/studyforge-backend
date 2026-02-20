@@ -2,15 +2,16 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial;
+  font-family: "Inter", sans-serif;
 }
 
 body {
   height: 100vh;
-  background: linear-gradient(-45deg, #1e1e2f, #3a3a6a, #2b5876, #4e4376);
+  display: flex;
+  background: linear-gradient(-45deg, #1f1c2c, #302b63, #24243e, #0f2027);
   background-size: 400% 400%;
   animation: gradientBG 12s ease infinite;
-  display: flex;
+  color: white;
 }
 
 @keyframes gradientBG {
@@ -19,101 +20,80 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-.app {
-  display: flex;
-  width: 100%;
-}
-
-/* SIDEBAR */
 .sidebar {
-  width: 250px;
-  padding: 20px;
+  width: 260px;
+  padding: 25px;
   backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.1);
-  border-right: 1px solid rgba(255,255,255,0.2);
-  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255,255,255,0.1);
 }
 
 .sidebar h2 {
   margin-bottom: 20px;
 }
 
-.credits-box {
-  background: rgba(255,255,255,0.15);
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.premium-btn {
-  background: linear-gradient(45deg, #ff00cc, #3333ff);
-  border: none;
-  padding: 10px;
-  border-radius: 12px;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
 .sidebar button {
   width: 100%;
-  padding: 10px;
-  border-radius: 12px;
+  padding: 12px;
   border: none;
-  margin-top: 10px;
+  border-radius: 10px;
+  margin-top: 15px;
   cursor: pointer;
+  background: linear-gradient(135deg, #7f5af0, #2cb67d);
+  color: white;
+  font-weight: 600;
 }
 
-/* CHAT AREA */
-.chat-area {
+.chat-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  backdrop-filter: blur(30px);
+  background: rgba(255,255,255,0.05);
 }
 
-.messages {
+#messages {
   flex: 1;
+  padding: 30px;
   overflow-y: auto;
-  margin-bottom: 15px;
 }
 
 .message {
-  padding: 12px;
-  border-radius: 16px;
-  margin-bottom: 10px;
   max-width: 70%;
-  backdrop-filter: blur(10px);
+  padding: 14px 18px;
+  margin-bottom: 15px;
+  border-radius: 16px;
+  animation: fadeIn 0.3s ease;
 }
 
 .user {
   align-self: flex-end;
-  background: rgba(0, 123, 255, 0.4);
-  color: white;
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
 }
 
-.bot {
+.assistant {
   align-self: flex-start;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+
+.input-area {
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 30px;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: rgba(255,255,255,0.1);
   color: white;
 }
 
-/* INPUT */
-.input-box {
-  display: flex;
-  gap: 10px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.input-box input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 20px;
-  border: none;
-}
-
-.input-box button {
-  padding: 12px 20px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  }
