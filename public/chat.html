@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>StudyForge</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,20 +10,14 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <h2 class="logo">StudyForge</h2>
+    <h2>StudyForge</h2>
 
     <div class="credits-box">
-      <p>Credits</p>
-      <span id="credits">0</span>
+      Credits: <span id="credits">0</span>
     </div>
 
-    <button class="premium-btn">
-      ✨ Go Premium
-    </button>
-
-    <button class="logout-btn" onclick="logout()">
-      Logout
-    </button>
+    <button class="premium-btn">✨ Go Premium</button>
+    <button onclick="logout()">Logout</button>
   </div>
 
   <!-- CHAT AREA -->
@@ -33,12 +26,9 @@
     <div id="messages" class="messages"></div>
 
     <div class="input-box">
-      <input 
-        id="messageInput" 
-        type="text" 
-        placeholder="Ask anything..." 
-        onkeydown="handleEnter(event)"
-      />
+      <input id="input"
+             placeholder="Ask anything..."
+             onkeypress="handleEnter(event)" />
       <button onclick="sendMessage()">Send</button>
     </div>
 
@@ -47,6 +37,5 @@
 </div>
 
 <script src="chat.js"></script>
-
 </body>
 </html>
