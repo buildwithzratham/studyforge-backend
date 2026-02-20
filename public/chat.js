@@ -1,18 +1,35 @@
 const token = localStorage.getItem("token");
-if (!token) window.location.href = "/login.html";
+const messagesDiv = document.getElementById("messages");
+const creditsSpan = document.getElementById("credits");
+
+if (!token) {
+  window.location.href = "/login.html";
+}
 
 async function loadHistory() {
   const res = await fetch("/history", {
-    headers: { Authorization: "Bearer " + token }
+    headers: {
+      Authorization: "Bearer " + token
+    }
   });
 
   const data = await res.json();
 
-  document.getElementById("credits").innerText = data.credits;
+  creditsSpan.textContent = data.credits;
 
-  data.messages.forEach(m => {
-    addMessage(m.role, m.content);
+  messagesDiv.innerHTML = "";
+
+  data.messages.forEach(msg => {
+    addMessage(msg.role, msg.content);
   });
+}
+
+function addMessage(role, content) {
+  const div = document.createElement("div");
+  div.classList.add("message", role);
+  div.textContent = content;
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 async function sendMessage() {
@@ -20,17 +37,10 @@ async function sendMessage() {
   const message = input.value.trim();
   if (!message) return;
 
-  if (document.getElementById("credits").innerText == "0") {
-    alert("No credits left.");
-    return;
-  }
-
   addMessage("user", message);
   input.value = "";
 
-  const typing = showTyping();
-
-  const res = await fetch("/chat", {
+  const response = await fetch("/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,32 +49,32 @@ async function sendMessage() {
     body: JSON.stringify({ message })
   });
 
-  typing.remove();
-
-  const data = await res.json();
-
-  if (res.ok) {
-    addMessage("assistant", data.reply);
-    document.getElementById("credits").innerText = data.credits;
-  } else {
-    alert(data.error);
+  if (!response.ok) {
+    const errorText = await response.text();
+    alert(errorText);
+    return;
   }
-}
 
-function addMessage(role, text) {
-  const div = document.createElement("div");
-  div.className = "message " + role;
-  div.innerText = text;
-  document.getElementById("messages").appendChild(div);
-  div.scrollIntoView({ behavior: "smooth" });
-}
+  const aiDiv = document.createElement("div");
+  aiDiv.classList.add("message", "assistant");
+  messagesDiv.appendChild(aiDiv);
 
-function showTyping() {
-  const div = document.createElement("div");
-  div.className = "typing";
-  div.innerHTML = "<span></span><span></span><span></span>";
-  document.getElementById("messages").appendChild(div);
-  return div;
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  let fullReply = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    fullReply += decoder.decode(value);
+    aiDiv.textContent = fullReply;
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  // reload credits after message
+  loadHistory();
 }
 
 function logout() {
