@@ -9,23 +9,25 @@
 <div class="app">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
+  <div class="sidebar glass">
     <h2>StudyForge</h2>
 
     <div class="credits-box">
       Credits: <span id="credits">0</span>
     </div>
 
-    <button class="premium-btn">✨ Go Premium</button>
+    <button class="premium-btn">✨ Upgrade to Premium</button>
+
+    <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
     <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- CHAT AREA -->
-  <div class="chat-area">
+  <!-- MAIN CHAT -->
+  <div class="main">
 
     <div id="messages" class="messages"></div>
 
-    <div class="input-box">
+    <div class="input-box glass">
       <input id="input"
              placeholder="Ask anything..."
              onkeypress="handleEnter(event)" />
