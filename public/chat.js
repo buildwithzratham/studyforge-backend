@@ -1,10 +1,10 @@
-const API_URL = "";
-
 const token = localStorage.getItem("token");
 
 if (!token) {
   window.location.href = "/login.html";
 }
+
+/* ================= LOAD HISTORY ================= */
 
 async function loadHistory() {
   const res = await fetch("/history", {
@@ -17,13 +17,17 @@ async function loadHistory() {
 
   if (res.ok) {
     const messagesDiv = document.getElementById("messages");
-    messagesDiv.innerHTML = "";
+    messagesDiv.innerHTML = ""; // prevent duplication
+
+    document.getElementById("credits").innerText = data.credits;
 
     data.messages.forEach(msg => {
       addMessage(msg.role, msg.content);
     });
   }
 }
+
+/* ================= ADD MESSAGE ================= */
 
 function addMessage(role, text) {
   const div = document.createElement("div");
@@ -34,8 +38,32 @@ function addMessage(role, text) {
   div.scrollIntoView();
 }
 
+/* ================= TYPING EFFECT ================= */
+
+function typeMessage(text) {
+  const div = document.createElement("div");
+  div.classList.add("message", "assistant");
+  document.getElementById("messages").appendChild(div);
+
+  let i = 0;
+  const speed = 20;
+
+  function typing() {
+    if (i < text.length) {
+      div.innerHTML += text.charAt(i);
+      div.scrollIntoView();
+      i++;
+      setTimeout(typing, speed);
+    }
+  }
+
+  typing();
+}
+
+/* ================= SEND MESSAGE ================= */
+
 async function sendMessage() {
-  const input = document.getElementById("messageInput");
+  const input = document.getElementById("input"); // FIXED ID
   const message = input.value.trim();
 
   if (!message) return;
@@ -55,11 +83,14 @@ async function sendMessage() {
   const data = await res.json();
 
   if (res.ok) {
-    addMessage("assistant", data.reply);
+    typeMessage(data.reply);
+    document.getElementById("credits").innerText = data.credits;
   } else {
     alert(data.error);
   }
 }
+
+/* ================= ENTER KEY ================= */
 
 function handleEnter(e) {
   if (e.key === "Enter") {
@@ -67,30 +98,13 @@ function handleEnter(e) {
   }
 }
 
+/* ================= LOGOUT ================= */
+
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "/login.html";
 }
-async function loadHistory() {
-  const token = localStorage.getItem("token");
 
-  const res = await fetch("/history", {
-    headers: {
-      Authorization: "Bearer " + token
-    }
-  });
+/* ================= INIT ================= */
 
-  const data = await res.json();
-
-  if (res.ok) {
-    const messagesDiv = document.getElementById("messages");
-    messagesDiv.innerHTML = "";   // <-- THIS LINE FIXES UI DUPLICATION
-
-    document.getElementById("credits").innerText = data.credits;
-
-    data.messages.forEach(msg => {
-      addMessage(msg.role, msg.content);
-    });
-  }
-}
 loadHistory();
