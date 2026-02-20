@@ -1,64 +1,27 @@
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "/login.html";
 
-let currentChatId = null;
+/* ================= LOAD HISTORY ================= */
 
-/* ================= LOAD CHATS ================= */
-
-async function loadChats() {
-  const res = await fetch("/chats", {
+async function loadHistory() {
+  const res = await fetch("/history", {
     headers: { Authorization: "Bearer " + token }
   });
 
-  const chats = await res.json();
+  const data = await res.json();
 
-  const chatList = document.getElementById("chatList");
-  chatList.innerHTML = "";
+  if (res.ok) {
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.innerHTML = "";
 
-  chats.forEach(chat => {
-    const div = document.createElement("div");
-    div.className = "chat-item";
-    div.innerText = chat.title;
-    div.onclick = () => selectChat(chat._id);
-    chatList.appendChild(div);
-  });
-
-  if (chats.length > 0) {
-    selectChat(chats[0]._id);
-  }
-}
-
-/* ================= SELECT CHAT ================= */
-
-async function selectChat(id) {
-  currentChatId = id;
-
-  const res = await fetch("/chats", {
-    headers: { Authorization: "Bearer " + token }
-  });
-
-  const chats = await res.json();
-  const chat = chats.find(c => c._id === id);
-
-  const messagesDiv = document.getElementById("messages");
-  messagesDiv.innerHTML = "";
-
-  if (chat) {
-    chat.messages.forEach(m => {
+    data.messages.forEach(m => {
       addMessage(m.role, m.content);
     });
+
+    document.getElementById("credits").innerText = data.credits;
+  } else {
+    alert("Failed to load history");
   }
-}
-
-/* ================= NEW CHAT ================= */
-
-async function createNewChat() {
-  await fetch("/new-chat", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + token }
-  });
-
-  await loadChats();
 }
 
 /* ================= SEND MESSAGE ================= */
@@ -68,15 +31,11 @@ async function sendMessage() {
   const message = input.value.trim();
 
   if (!message) return;
-  if (!currentChatId) {
-    alert("Create or select a chat first");
-    return;
-  }
 
   addMessage("user", message);
   input.value = "";
 
-  const res = await fetch(`/chat/${currentChatId}`, {
+  const res = await fetch("/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -107,6 +66,14 @@ function addMessage(role, text) {
   div.scrollIntoView({ behavior: "smooth" });
 }
 
+/* ================= ENTER KEY SUPPORT ================= */
+
+function handleEnter(e) {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+}
+
 /* ================= LOGOUT ================= */
 
 function logout() {
@@ -114,6 +81,6 @@ function logout() {
   window.location.href = "/login.html";
 }
 
+/* ================= INIT ================= */
 
-/* ============== INIT ============== */
-loadChats();
+loadHistory();
