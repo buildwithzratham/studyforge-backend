@@ -73,14 +73,26 @@ res.json({
   reply,
   credits: user.credits
 });
+});
+    
+app.get("/history", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
 
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      messages: user.messages,
+      credits: user.credits
+    });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "AI failed" });
+    res.status(500).json({ error: "Failed to load history" });
   }
 });
-
    
 app.post("/login", async (req, res) => {
   try {
