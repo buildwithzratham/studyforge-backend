@@ -131,23 +131,28 @@ body {
 }
 
 pre {
+  position: relative;
   background: #0f172a;
-  padding: 15px;
+  padding: 20px;
   border-radius: 12px;
   overflow-x: auto;
   font-size: 14px;
 }
 
-code {
-  color: #2cb67d;
-}
-
 .copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   background: #2cb67d;
   border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 5px 10px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
-  margin-top: 5px;
+  color: white;
+  transition: 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: #22a863;
 }
