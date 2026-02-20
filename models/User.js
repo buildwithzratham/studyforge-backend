@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   credits: { type: Number, default: 100 },
   totalMessages: { type: Number, default: 0 },
 totalTokensUsed: { type: Number, default: 0 },
-  isAdmin: { type: Boolean, default: false }
+  isAdmin: { type: Boolean, default: false },
   messages: [
     {
       role: String,
