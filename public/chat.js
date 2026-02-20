@@ -1,50 +1,75 @@
-const API_URL = "https://studyforge-backend-bjlh.onrender.com";
+const API_URL = "";
 
 const token = localStorage.getItem("token");
 
 if (!token) {
-  window.location.href = "login.html";
+  window.location.href = "/login.html";
 }
 
-async function sendMessage() {
-  const input = document.getElementById("messageInput");
-  const text = input.value.trim();
-
-  if (!text) return;
-
-  addMessage(text, "user");
-  input.value = "";
-
-  const res = await fetch(`${API_URL}/chat`, {
-    method: "POST",
+async function loadHistory() {
+  const res = await fetch("/history", {
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({ message: text })
+      "Authorization": "Bearer " + token
+    }
   });
 
   const data = await res.json();
 
-  if (data.reply) {
-    addMessage(data.reply, "assistant");
-  } else {
-    addMessage("Error: " + data.error, "assistant");
+  if (res.ok) {
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.innerHTML = "";
+
+    data.messages.forEach(msg => {
+      addMessage(msg.role, msg.content);
+    });
   }
 }
 
-function addMessage(text, type) {
-  const container = document.getElementById("messages");
+function addMessage(role, text) {
+  const div = document.createElement("div");
+  div.classList.add("message", role);
+  div.innerText = text;
 
-  const msg = document.createElement("div");
-  msg.classList.add("message", type);
-  msg.innerText = text;
+  document.getElementById("messages").appendChild(div);
+  div.scrollIntoView();
+}
 
-  container.appendChild(msg);
-  container.scrollTop = container.scrollHeight;
+async function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  addMessage("user", message);
+  input.value = "";
+
+  const res = await fetch("/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ message })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    addMessage("assistant", data.reply);
+  } else {
+    alert(data.error);
+  }
+}
+
+function handleEnter(e) {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
 }
 
 function logout() {
   localStorage.removeItem("token");
-  window.location.href = "login.html";
+  window.location.href = "/login.html";
 }
+
+loadHistory();
