@@ -1,22 +1,8 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(-45deg, #1e1e2f, #2c3e50, #121212, #1f2937);
-  background-size: 400% 400%;
-  animation: gradientMove 12s ease infinite;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
   color: white;
-  transition: 0.3s;
-}
-
-@keyframes gradientMove {
-  0% { background-position: 0% 50% }
-  50% { background-position: 100% 50% }
-  100% { background-position: 0% 50% }
-}
-
-.light-mode {
-  background: #f2f2f2;
-  color: black;
 }
 
 .app {
@@ -24,135 +10,78 @@ body {
   height: 100vh;
 }
 
-/* SIDEBAR */
-
 .sidebar {
   width: 250px;
-  padding: 25px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.glass {
-  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(15px);
-  border-right: 1px solid rgba(255,255,255,0.2);
 }
-
-.credits-box {
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.15);
-}
-
-.premium-btn {
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(45deg, #7f5af0, #2cb67d);
-  color: white;
-  cursor: pointer;
-}
-
-.toggle-btn {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-/* MAIN */
 
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 30px;
 }
 
 .messages {
   flex: 1;
+  padding: 20px;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
-
-/* MESSAGE */
 
 .message {
-  max-width: 65%;
-  padding: 12px 16px;
-  border-radius: 20px;
-  font-size: 15px;
-  animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  max-width: 70%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 14px;
 }
 
 .user {
-  align-self: flex-end;
   background: #2563eb;
+  align-self: flex-end;
 }
 
 .assistant {
-  align-self: flex-start;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
 }
-
-/* INPUT */
 
 .input-box {
   display: flex;
-  gap: 10px;
   padding: 15px;
-  border-radius: 15px;
+  gap: 10px;
 }
 
 .input-box input {
   flex: 1;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 10px;
+  border-radius: 10px;
   border: none;
-  font-size: 15px;
 }
 
 .input-box button {
-  padding: 12px 18px;
-  border-radius: 12px;
+  padding: 10px 20px;
+  border-radius: 10px;
   border: none;
-  background: #2cb67d;
+  background: #10b981;
   color: white;
   cursor: pointer;
 }
 
 pre {
-  position: relative;
   background: #0f172a;
-  padding: 20px;
-  border-radius: 12px;
-  overflow-x: auto;
-  font-size: 14px;
+  padding: 15px;
+  border-radius: 10px;
+  position: relative;
 }
 
 .copy-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #2cb67d;
+  background: #10b981;
   border: none;
   padding: 5px 10px;
   border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
   color: white;
-  transition: 0.2s ease;
-}
-
-.copy-btn:hover {
-  background: #22a863;
+  cursor: pointer;
 }
