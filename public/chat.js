@@ -17,7 +17,7 @@ async function loadHistory() {
 
   if (res.ok) {
     const messagesDiv = document.getElementById("messages");
-    messagesDiv.innerHTML = ""; // prevent duplication
+    messagesDiv.innerHTML = "";
 
     document.getElementById("credits").innerText = data.credits;
 
@@ -35,7 +35,7 @@ function addMessage(role, text) {
   div.innerText = text;
 
   document.getElementById("messages").appendChild(div);
-  div.scrollIntoView();
+  div.scrollIntoView({ behavior: "smooth" });
 }
 
 /* ================= TYPING EFFECT ================= */
@@ -46,12 +46,12 @@ function typeMessage(text) {
   document.getElementById("messages").appendChild(div);
 
   let i = 0;
-  const speed = 20;
+  const speed = 15;
 
   function typing() {
     if (i < text.length) {
       div.innerHTML += text.charAt(i);
-      div.scrollIntoView();
+      div.scrollIntoView({ behavior: "smooth" });
       i++;
       setTimeout(typing, speed);
     }
@@ -63,7 +63,7 @@ function typeMessage(text) {
 /* ================= SEND MESSAGE ================= */
 
 async function sendMessage() {
-  const input = document.getElementById("input"); // FIXED ID
+  const input = document.getElementById("input");
   const message = input.value.trim();
 
   if (!message) return;
@@ -96,6 +96,12 @@ function handleEnter(e) {
   if (e.key === "Enter") {
     sendMessage();
   }
+}
+
+/* ================= THEME TOGGLE ================= */
+
+function toggleTheme() {
+  document.body.classList.toggle("light-mode");
 }
 
 /* ================= LOGOUT ================= */
