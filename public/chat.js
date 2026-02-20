@@ -92,38 +92,40 @@ function addCopyButtons() {
 /* ================= SEND MESSAGE ================= */
 
 async function sendMessage() {
-  const input = document.getElementById("input");
+  const input = document.getElementById("messageInput");
   const message = input.value.trim();
-
   if (!message) return;
 
   addMessage("user", message);
   input.value = "";
 
-  try {
-    const res = await fetch("/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({ message })
-    });
+  const response = await fetch("/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ message })
+  });
 
-    const data = await res.json();
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8");
 
-    if (res.ok) {
-      typeMessage(data.reply);
-      document.getElementById("credits").innerText = data.credits;
-    } else {
-      alert(data.error || "AI failed");
-    }
-  } catch (err) {
-    console.error("Chat error:", err);
-    alert("Server error");
+  const div = document.createElement("div");
+  div.classList.add("message", "assistant");
+  document.getElementById("messages").appendChild(div);
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    const chunk = decoder.decode(value);
+    div.innerHTML += marked.parse(chunk);
+    div.scrollIntoView({ behavior: "smooth" });
   }
-}
 
+  addCopyButtons();
+}
 /* ================= ENTER KEY ================= */
 
 function handleEnter(e) {
