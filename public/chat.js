@@ -8,16 +8,11 @@ async function loadHistory() {
 
   const data = await res.json();
 
-  if (res.ok) {
-    const messagesDiv = document.getElementById("messages");
-    messagesDiv.innerHTML = "";
+  document.getElementById("credits").innerText = data.credits;
 
-    data.messages.forEach(m => {
-      addMessage(m.role, m.content);
-    });
-
-    document.getElementById("credits").innerText = data.credits;
-  }
+  data.messages.forEach(m => {
+    addMessage(m.role, m.content);
+  });
 }
 
 async function sendMessage() {
@@ -25,10 +20,15 @@ async function sendMessage() {
   const message = input.value.trim();
   if (!message) return;
 
+  if (document.getElementById("credits").innerText == "0") {
+    alert("No credits left.");
+    return;
+  }
+
   addMessage("user", message);
   input.value = "";
 
-  const typingDiv = showTyping();
+  const typing = showTyping();
 
   const res = await fetch("/chat", {
     method: "POST",
@@ -39,38 +39,32 @@ async function sendMessage() {
     body: JSON.stringify({ message })
   });
 
-  typingDiv.remove();
+  typing.remove();
 
   const data = await res.json();
 
   if (res.ok) {
-    typeMessage(data.reply);
+    addMessage("assistant", data.reply);
     document.getElementById("credits").innerText = data.credits;
   } else {
     alert(data.error);
   }
 }
 
-function typeMessage(text) {
+function addMessage(role, text) {
   const div = document.createElement("div");
-  div.className = "message assistant";
+  div.className = "message " + role;
+  div.innerText = text;
+  document.getElementById("messages").appendChild(div);
+  div.scrollIntoView({ behavior: "smooth" });
+}
 
-  const messages = document.getElementById("messages");
-  messages.appendChild(div);
-
-  let i = 0;
-  const speed = 15;
-
-  function typing() {
-    if (i < text.length) {
-      div.innerText += text.charAt(i);
-      div.scrollIntoView({ behavior: "smooth" });
-      i++;
-      setTimeout(typing, speed);
-    }
-  }
-
-  typing();
+function showTyping() {
+  const div = document.createElement("div");
+  div.className = "typing";
+  div.innerHTML = "<span></span><span></span><span></span>";
+  document.getElementById("messages").appendChild(div);
+  return div;
 }
 
 function logout() {
