@@ -14,11 +14,12 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 10
   },
-  messages: {
-  type: Array,
-  default: []
-}
-
+  messages: [
+    {
+      role: String,
+      content: String
+    }
+  ]
 });
 
 export default mongoose.model("User", userSchema);
