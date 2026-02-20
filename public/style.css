@@ -129,3 +129,15 @@ body {
   color: white;
   cursor: pointer;
 }
+
+pre {
+  background: #0f172a;
+  padding: 15px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-size: 14px;
+}
+
+code {
+  color: #2cb67d;
+}
