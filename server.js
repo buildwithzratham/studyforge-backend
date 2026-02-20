@@ -75,11 +75,17 @@ app.post("/chat", authMiddleware, async (req, res) => {
     }
 
     /* ===== GROQ REQUEST ===== */
-    const completion = await groq.chat.completions.create({
-      model: "llama3-8b-8192", // safer stable model
-      messages: user.messages,
-      temperature: 0.7,
-    });
+    // Remove Mongo _id fields before sending to Groq
+const cleanMessages = user.messages.map(msg => ({
+  role: msg.role,
+  content: msg.content
+}));
+
+const completion = await groq.chat.completions.create({
+  model: "llama3-8b-8192",
+  messages: cleanMessages,
+  temperature: 0.7,
+});
 
     const reply =
       completion.choices?.[0]?.message?.content || "No response from AI";
