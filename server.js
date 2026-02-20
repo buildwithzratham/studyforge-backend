@@ -54,10 +54,15 @@ app.post("/chat", authMiddleware, async (req, res) => {
       user.messages = user.messages.slice(-5);
     }
 
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
-      messages: user.messages
-    });
+    const cleanMessages = user.messages.map(m => ({
+  role: m.role,
+  content: m.content
+}));
+
+const completion = await groq.chat.completions.create({
+  model: "llama-3.1-8b-instant",
+  messages: cleanMessages
+});
 
     const reply = completion.choices[0]?.message?.content || "";
 
