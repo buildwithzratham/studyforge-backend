@@ -1,80 +1,50 @@
+const API_URL = "https://studyforge-backend-bjlh.onrender.com";
+
 const token = localStorage.getItem("token");
 
 if (!token) {
-  window.location.href = "/login.html";
-}
-
-// ENTER key support
-document.getElementById("messageInput").addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    sendMessage();
-  }
-});
-
-function logout() {
-  localStorage.removeItem("token");
-  window.location.href = "/login.html";
-}
-
-function toggleTheme() {
-  document.body.classList.toggle("light");
-}
-function typeText(element, text, speed = 20) {
-  element.innerHTML = "";
-  let i = 0;
-
-  function typing() {
-    if (i < text.length) {
-      element.innerHTML += text.charAt(i);
-      i++;
-      setTimeout(typing, speed);
-    }
-  }
-
-  typing();
+  window.location.href = "login.html";
 }
 
 async function sendMessage() {
   const input = document.getElementById("messageInput");
-  const message = input.value;
+  const text = input.value.trim();
 
-  if (!message) return;
+  if (!text) return;
 
-  const chatBox = document.getElementById("chatBox");
-
-  chatBox.innerHTML += `<div class="message user">${message}</div>`;
+  addMessage(text, "user");
   input.value = "";
 
-  // Typing animation
-  chatBox.innerHTML += `<div class="message ai" id="typing">AI is typing...</div>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
+  const res = await fetch(`${API_URL}/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ message: text })
+  });
 
-  try {
-    const res = await fetch("/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({ message })
-    });
+  const data = await res.json();
 
-   const data = await res.json();
+  if (data.reply) {
+    addMessage(data.reply, "assistant");
+  } else {
+    addMessage("Error: " + data.error, "assistant");
+  }
+}
 
-const aiMessage = document.createElement("div");
-aiMessage.className = "message assistant";
-document.getElementById("chatBox").appendChild(aiMessage);
+function addMessage(text, type) {
+  const container = document.getElementById("messages");
 
-typeText(aiMessage, data.reply);
+  const msg = document.createElement("div");
+  msg.classList.add("message", type);
+  msg.innerText = text;
 
-document.getElementById("creditsBox").innerText =
-  "Credits: " + data.credits;
+  container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
+}
 
-    document.getElementById("typing").remove();
-    
-} catch (err) {
-    console.error(err);
-    document.getElementById("typing")?.remove();
-    chatBox.innerHTML += `<div class="message ai">Server error</div>`;
-   }
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "login.html";
 }
