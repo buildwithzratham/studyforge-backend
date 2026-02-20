@@ -65,10 +65,29 @@ function typeMessage(text) {
       div.scrollIntoView({ behavior: "smooth" });
       i++;
       setTimeout(typing, speed);
+    } else {
+      addCopyButtons();   // ✅ correct
     }
   }
 
-  typing();
+  typing();   // ✅ YOU MISSED THIS LINE
+}
+function addCopyButtons() {
+  document.querySelectorAll("pre").forEach(block => {
+    if (block.querySelector(".copy-btn")) return;
+
+    const btn = document.createElement("button");
+    btn.innerText = "Copy";
+    btn.className = "copy-btn";
+
+    btn.onclick = () => {
+      navigator.clipboard.writeText(block.innerText);
+      btn.innerText = "Copied!";
+      setTimeout(() => btn.innerText = "Copy", 1500);
+    };
+
+    block.appendChild(btn);
+  });
 }
 /* ================= SEND MESSAGE ================= */
 
