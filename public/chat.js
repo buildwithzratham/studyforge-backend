@@ -3,17 +3,21 @@ if (!token) window.location.href = "/login.html";
 
 let currentChatId = null;
 
+/* ================= LOAD CHATS ================= */
+
 async function loadChats() {
   const res = await fetch("/chats", {
     headers: { Authorization: "Bearer " + token }
   });
 
   const chats = await res.json();
+
   const chatList = document.getElementById("chatList");
   chatList.innerHTML = "";
 
   chats.forEach(chat => {
     const div = document.createElement("div");
+    div.className = "chat-item";
     div.innerText = chat.title;
     div.onclick = () => selectChat(chat._id);
     chatList.appendChild(div);
@@ -24,25 +28,50 @@ async function loadChats() {
   }
 }
 
-async function createNewChat() {
-  const res = await fetch("/new-chat", {
-    method: "POST",
+/* ================= SELECT CHAT ================= */
+
+async function selectChat(id) {
+  currentChatId = id;
+
+  const res = await fetch("/chats", {
     headers: { Authorization: "Bearer " + token }
   });
 
   const chats = await res.json();
-  loadChats();
+  const chat = chats.find(c => c._id === id);
+
+  const messagesDiv = document.getElementById("messages");
+  messagesDiv.innerHTML = "";
+
+  if (chat) {
+    chat.messages.forEach(m => {
+      addMessage(m.role, m.content);
+    });
+  }
 }
 
-function selectChat(id) {
-  currentChatId = id;
-  document.getElementById("messages").innerHTML = "";
+/* ================= NEW CHAT ================= */
+
+async function createNewChat() {
+  await fetch("/new-chat", {
+    method: "POST",
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  await loadChats();
 }
+
+/* ================= SEND MESSAGE ================= */
 
 async function sendMessage() {
   const input = document.getElementById("messageInput");
   const message = input.value.trim();
-  if (!message || !currentChatId) return;
+
+  if (!message) return;
+  if (!currentChatId) {
+    alert("Create or select a chat first");
+    return;
+  }
 
   addMessage("user", message);
   input.value = "";
@@ -66,17 +95,25 @@ async function sendMessage() {
   }
 }
 
+/* ================= ADD MESSAGE UI ================= */
+
 function addMessage(role, text) {
   const div = document.createElement("div");
   div.className = "message " + role;
   div.innerText = text;
-  document.getElementById("messages").appendChild(div);
-  div.scrollIntoView();
+
+  const messages = document.getElementById("messages");
+  messages.appendChild(div);
+  div.scrollIntoView({ behavior: "smooth" });
 }
+
+/* ================= LOGOUT ================= */
 
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "/login.html";
 }
+
+/* ================= INIT ================= */
 
 loadChats();
