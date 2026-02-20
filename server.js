@@ -37,8 +37,9 @@ app.post("/chat", authMiddleware, async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    if (user.credits <= 0)
+    if (user.credits <= 0) {
       return res.status(403).json({ error: "No credits left" });
+    }
 
     user.messages.push({ role: "user", content: message });
 
@@ -49,18 +50,26 @@ app.post("/chat", authMiddleware, async (req, res) => {
 
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
-      messages: cleanMessages
+      messages: cleanMessages,
+      stream: true
     });
 
-    const reply =
-      completion.choices?.[0]?.message?.content || "No response";
+    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Transfer-Encoding", "chunked");
 
-    user.messages.push({ role: "assistant", content: reply });
+    let fullReply = "";
+
+    for await (const chunk of completion) {
+      const content = chunk.choices[0]?.delta?.content || "";
+      fullReply += content;
+      res.write(content);
+    }
+
+    user.messages.push({ role: "assistant", content: fullReply });
     user.credits -= 1;
-
     await user.save();
 
-    res.json({ reply, credits: user.credits });
+    res.end();
 
   } catch (err) {
     console.error(err);
