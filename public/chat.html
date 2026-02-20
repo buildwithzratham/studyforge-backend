@@ -12,14 +12,16 @@
 <div class="app">
 
   <div class="sidebar">
-    <h2>StudyForge</h2>
-    <button onclick="createNewChat()">+ New Chat</button>
-    <div id="chatList"></div>
-    <div class="credits-box">
-      Credits: <span id="credits">0</span>
-    </div>
-    <button onclick="logout()">Logout</button>
-  </div>
+  <h2>StudyForge</h2>
+
+  <button onclick="newChat()">+ New Chat</button>
+
+  <div id="chatList"></div>
+
+  <p>Credits: <span id="credits">0</span></p>
+
+  <button onclick="logout()">Logout</button>
+</div>
 
   <div class="main">
     <div id="messages" class="messages"></div>
