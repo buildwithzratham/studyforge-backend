@@ -1,3 +1,5 @@
+/* ================= AUTH CHECK ================= */
+
 const token = localStorage.getItem("token");
 
 if (!token) {
@@ -7,23 +9,29 @@ if (!token) {
 /* ================= LOAD HISTORY ================= */
 
 async function loadHistory() {
-  const res = await fetch("/history", {
-    headers: {
-      "Authorization": "Bearer " + token
-    }
-  });
-
-  const data = await res.json();
-
-  if (res.ok) {
-    const messagesDiv = document.getElementById("messages");
-    messagesDiv.innerHTML = "";
-
-    document.getElementById("credits").innerText = data.credits;
-
-    data.messages.forEach(msg => {
-      addMessage(msg.role, msg.content);
+  try {
+    const res = await fetch("/history", {
+      headers: {
+        "Authorization": "Bearer " + token
+      }
     });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      const messagesDiv = document.getElementById("messages");
+      messagesDiv.innerHTML = "";
+
+      document.getElementById("credits").innerText = data.credits;
+
+      data.messages.forEach(msg => {
+        addMessage(msg.role, msg.content);
+      });
+    } else {
+      console.error(data.error);
+    }
+  } catch (err) {
+    console.error("History load error:", err);
   }
 }
 
@@ -34,7 +42,8 @@ function addMessage(role, text) {
   div.classList.add("message", role);
   div.innerText = text;
 
-  document.getElementById("messages").appendChild(div);
+  const messagesDiv = document.getElementById("messages");
+  messagesDiv.appendChild(div);
   div.scrollIntoView({ behavior: "smooth" });
 }
 
@@ -43,7 +52,9 @@ function addMessage(role, text) {
 function typeMessage(text) {
   const div = document.createElement("div");
   div.classList.add("message", "assistant");
-  document.getElementById("messages").appendChild(div);
+
+  const messagesDiv = document.getElementById("messages");
+  messagesDiv.appendChild(div);
 
   let i = 0;
   const speed = 15;
@@ -71,22 +82,27 @@ async function sendMessage() {
   addMessage("user", message);
   input.value = "";
 
-  const res = await fetch("/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token
-    },
-    body: JSON.stringify({ message })
-  });
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify({ message })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (res.ok) {
-    typeMessage(data.reply);
-    document.getElementById("credits").innerText = data.credits;
-  } else {
-    alert(data.error);
+    if (res.ok) {
+      typeMessage(data.reply);
+      document.getElementById("credits").innerText = data.credits;
+    } else {
+      alert(data.error || "AI failed");
+    }
+  } catch (err) {
+    console.error("Chat error:", err);
+    alert("Server error");
   }
 }
 
