@@ -71,5 +71,26 @@ function logout() {
   localStorage.removeItem("token");
   window.location.href = "/login.html";
 }
+async function loadHistory() {
+  const token = localStorage.getItem("token");
 
+  const res = await fetch("/history", {
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.innerHTML = "";   // <-- THIS LINE FIXES UI DUPLICATION
+
+    document.getElementById("credits").innerText = data.credits;
+
+    data.messages.forEach(msg => {
+      addMessage(msg.role, msg.content);
+    });
+  }
+}
 loadHistory();
