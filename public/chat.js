@@ -57,11 +57,11 @@ function typeMessage(text) {
   messagesDiv.appendChild(div);
 
   let i = 0;
-  const speed = 15;
+  const speed = 10;
 
   function typing() {
     if (i < text.length) {
-      div.innerHTML += text.charAt(i);
+      div.innerHTML = marked.parse(text.slice(0, i));
       div.scrollIntoView({ behavior: "smooth" });
       i++;
       setTimeout(typing, speed);
@@ -70,7 +70,6 @@ function typeMessage(text) {
 
   typing();
 }
-
 /* ================= SEND MESSAGE ================= */
 
 async function sendMessage() {
