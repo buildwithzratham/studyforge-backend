@@ -13,11 +13,9 @@ body{
   flex-direction:column;
 }
 
-.glass{
-  backdrop-filter:blur(15px);
-  background:rgba(255,255,255,0.1);
-  border-radius:20px;
-  padding:15px;
+.glass {
+  backdrop-filter: blur(20px);
+  background: rgba(255,255,255,0.05);
 }
 
 .topbar{
@@ -33,11 +31,11 @@ body{
   padding:10px;
 }
 
-.message{
-  padding:10px 15px;
-  border-radius:18px;
-  margin:8px 0;
-  max-width:75%;
+.message {
+  padding: 14px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .user {
