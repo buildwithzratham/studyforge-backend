@@ -105,7 +105,6 @@ async function sendMessage() {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
 
-  loadHistory();
 }
 
 function logout() {
