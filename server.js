@@ -88,6 +88,15 @@ app.get("/history", authMiddleware, async (req, res) => {
   });
 });
 
+app.get("/analytics", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  res.json({
+    totalMessages: user.totalMessages,
+    credits: user.credits
+  });
+});
+
 /* ========= REGISTER ========= */
 app.post("/register", async (req, res) => {
   try {
