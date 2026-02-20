@@ -133,3 +133,52 @@ pre {
 code {
   color: #00ffcc;
 }
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.message {
+  max-width: 70%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.user {
+  background: linear-gradient(135deg,#007aff,#0051ff);
+  align-self: flex-end;
+}
+
+.assistant {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+}
