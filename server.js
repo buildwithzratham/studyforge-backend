@@ -8,7 +8,6 @@ import mongoose from "mongoose";
 import User from "./models/User.js";
 import { authMiddleware } from "./middleware/auth.js";
 import rateLimit from "express-rate-limit";
-import Razorpay from "razorpay";
 
 dotenv.config();
 
