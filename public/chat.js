@@ -116,11 +116,9 @@ function logout() {
 
 /* ============== NEW CHAT ============== */
 function newChat() {
-  document.getElementById("messages").innerHTML = "";
+  const messages = document.getElementById("messages");
+  messages.innerHTML = "";
 }
 
 /* ============== INIT ============== */
-loadChats();
-/* ================= INIT ================= */
-
 loadChats();
