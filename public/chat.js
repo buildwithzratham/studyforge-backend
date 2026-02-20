@@ -23,11 +23,12 @@ async function loadHistory() {
 async function sendMessage() {
   const input = document.getElementById("messageInput");
   const message = input.value.trim();
-
   if (!message) return;
 
   addMessage("user", message);
   input.value = "";
+
+  const typingDiv = showTyping();
 
   const res = await fetch("/chat", {
     method: "POST",
@@ -38,6 +39,8 @@ async function sendMessage() {
     body: JSON.stringify({ message })
   });
 
+  typingDiv.remove();
+
   const data = await res.json();
 
   if (res.ok) {
@@ -46,16 +49,6 @@ async function sendMessage() {
   } else {
     alert(data.error);
   }
-}
-
-function addMessage(role, text) {
-  const div = document.createElement("div");
-  div.className = "message " + role;
-  div.innerText = text;
-
-  const messages = document.getElementById("messages");
-  messages.appendChild(div);
-  div.scrollIntoView({ behavior: "smooth" });
 }
 
 function typeMessage(text) {
