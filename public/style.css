@@ -124,3 +124,14 @@ button{
 .copy-btn:hover {
   background: rgba(255,255,255,0.25);
 }
+
+pre {
+  background: #111;
+  padding: 12px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+code {
+  color: #00ffcc;
+}
