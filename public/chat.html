@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StudyForge</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
 <div class="app">
@@ -17,7 +20,6 @@
     </div>
 
     <button class="premium-btn">✨ Upgrade to Premium</button>
-
     <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
     <button onclick="logout()">Logout</button>
   </div>
@@ -28,9 +30,12 @@
     <div id="messages" class="messages"></div>
 
     <div class="input-box glass">
-      <input id="input"
-             placeholder="Ask anything..."
-             onkeypress="handleEnter(event)" />
+      <input 
+        id="input" 
+        placeholder="Ask anything..."
+        autocomplete="off"
+        onkeypress="handleEnter(event)"
+      />
       <button onclick="sendMessage()">Send</button>
     </div>
 
