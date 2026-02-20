@@ -1,8 +1,6 @@
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "/login.html";
 
-/* ================= LOAD HISTORY ================= */
-
 async function loadHistory() {
   const res = await fetch("/history", {
     headers: { Authorization: "Bearer " + token }
@@ -19,12 +17,8 @@ async function loadHistory() {
     });
 
     document.getElementById("credits").innerText = data.credits;
-  } else {
-    alert("Failed to load history");
   }
 }
-
-/* ================= SEND MESSAGE ================= */
 
 async function sendMessage() {
   const input = document.getElementById("messageInput");
@@ -47,14 +41,12 @@ async function sendMessage() {
   const data = await res.json();
 
   if (res.ok) {
-    addMessage("assistant", data.reply);
+    typeMessage(data.reply);
     document.getElementById("credits").innerText = data.credits;
   } else {
     alert(data.error);
   }
 }
-
-/* ================= ADD MESSAGE UI ================= */
 
 function addMessage(role, text) {
   const div = document.createElement("div");
@@ -66,21 +58,31 @@ function addMessage(role, text) {
   div.scrollIntoView({ behavior: "smooth" });
 }
 
-/* ================= ENTER KEY SUPPORT ================= */
+function typeMessage(text) {
+  const div = document.createElement("div");
+  div.className = "message assistant";
 
-function handleEnter(e) {
-  if (e.key === "Enter") {
-    sendMessage();
+  const messages = document.getElementById("messages");
+  messages.appendChild(div);
+
+  let i = 0;
+  const speed = 15;
+
+  function typing() {
+    if (i < text.length) {
+      div.innerText += text.charAt(i);
+      div.scrollIntoView({ behavior: "smooth" });
+      i++;
+      setTimeout(typing, speed);
+    }
   }
-}
 
-/* ================= LOGOUT ================= */
+  typing();
+}
 
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "/login.html";
 }
-
-/* ================= INIT ================= */
 
 loadHistory();
