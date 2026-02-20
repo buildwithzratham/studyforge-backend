@@ -10,20 +10,31 @@
 
 <div class="app">
 
-  <div class="topbar glass">
+  <div class="sidebar glass">
     <h2>StudyForge</h2>
-    <div>
-      <span id="credits">0</span>
-      <button onclick="logout()">Logout</button>
-    </div>
+    <button onclick="newChat()">+ New Chat</button>
+    <div id="conversationList"></div>
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <div id="messages" class="messages"></div>
+  <div class="main">
 
-  <div class="inputbar glass">
-    <input id="messageInput" placeholder="Ask anything..."
-      onkeypress="if(event.key==='Enter') sendMessage()" />
-    <button onclick="sendMessage()">Send</button>
+    <div class="topbar glass">
+      <span>Credits: <span id="credits">0</span></span>
+      <button onclick="window.location.href='/subscription.html'">
+        Upgrade
+      </button>
+    </div>
+
+    <div id="messages" class="messages"></div>
+
+    <div class="inputbar glass">
+      <input id="messageInput"
+        placeholder="Ask anything..."
+        onkeypress="if(event.key==='Enter') sendMessage()" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+
   </div>
 
 </div>
