@@ -14,11 +14,10 @@ async function login() {
     const data = await res.json();
 
     if (res.ok) {
-      // Save token in browser
+      // Save token
       localStorage.setItem("token", data.token);
-window.location.href = "/chat.html";
 
-      // Go to chat page
+      // Redirect to chat page
       window.location.href = "/chat.html";
     } else {
       alert(data.error || "Login failed");
