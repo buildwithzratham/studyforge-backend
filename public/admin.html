@@ -1,5 +1,17 @@
-<h2>Admin Panel</h2>
-<div id="userList"></div>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+  <div class="glass" style="padding:20px; margin:40px;">
+    <h2>Admin Panel</h2>
+    <div id="userList"></div>
+  </div>
+</div>
 
 <script>
 const token = localStorage.getItem("token");
@@ -9,9 +21,19 @@ fetch("/admin/users", {
     Authorization: "Bearer " + token
   }
 })
-.then(res => res.json())
+.then(res => {
+  if (!res.ok) throw new Error("Access Denied");
+  return res.json();
+})
 .then(data => {
   document.getElementById("userList").innerHTML =
     "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+})
+.catch(err => {
+  document.getElementById("userList").innerHTML =
+    "<p style='color:red'>Access Denied</p>";
 });
 </script>
+
+</body>
+</html>
