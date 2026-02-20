@@ -27,107 +27,58 @@ app.get("/", (req, res) => {
   res.send("StudyForge backend running 🚀");
 });
 
-/* ================= CHAT ROUTE ================= */
+/* ================= CHAT ================= */
 app.post("/chat", authMiddleware, async (req, res) => {
   try {
     const { message } = req.body;
+    if (!message) return res.status(400).json({ error: "Message required" });
 
     const user = await User.findById(req.user.id);
-
     if (!user) return res.status(404).json({ error: "User not found" });
-
-    if (!user.premium && user.credits <= 0)
-      return res.status(403).json({ error: "No credits left" });
+    if (user.credits <= 0) return res.status(403).json({ error: "No credits left" });
 
     user.messages.push({ role: "user", content: message });
-    if (user.messages.length > 5)
-      user.messages = user.messages.slice(-5);
 
-    const cleanMessages = user.messages.map(m => ({
-      role: m.role,
-      content: m.content
-    }));
-
-    const stream = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
-      messages: cleanMessages,
-      stream: true,
-    });
-
-    res.setHeader("Content-Type", "text/plain");
-
-    let fullReply = "";
-
-    for await (const chunk of stream) {
-      const token = chunk.choices[0]?.delta?.content || "";
-      fullReply += token;
-      res.write(token);
+    if (user.messages.length > 10) {
+      user.messages = user.messages.slice(-10);
     }
 
-    res.end();
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: user.messages
+    });
 
-    user.messages.push({ role: "assistant", content: fullReply });
+    const reply = completion.choices[0]?.message?.content || "No response";
 
-    if (!user.premium) user.credits -= 1;
+    user.messages.push({ role: "assistant", content: reply });
+    user.credits -= 1;
 
     await user.save();
 
+    res.json({ reply, credits: user.credits });
+
   } catch (err) {
     console.error(err);
-    res.status(500).end();
+    res.status(500).json({ error: "AI failed" });
   }
 });
 
-/* ================= HISTORY ROUTE ================= */
+/* ================= HISTORY ================= */
 app.get("/history", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (!user) return res.status(404).json({ error: "User not found" });
 
     res.json({
       messages: user.messages,
       credits: user.credits
     });
-
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
     res.status(500).json({ error: "Failed to load history" });
   }
 });
 
-/* ================= LOGIN ================= */
-app.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: "User not found" });
-    }
-
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) {
-      return res.status(400).json({ error: "Wrong password" });
-    }
-
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.json({ token });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Login failed" });
-  }
-});
-
-/* ================= REGISTER ================= */
+/* ================= AUTH ================= */
 app.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -141,14 +92,32 @@ app.post("/register", async (req, res) => {
     });
 
     res.json({ message: "User created" });
-
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "Register failed" });
   }
 });
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ error: "User not found" });
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(400).json({ error: "Wrong password" });
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ token });
+  } catch {
+    res.status(500).json({ error: "Login failed" });
+  }
 });
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
