@@ -5,41 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StudyForge</title>
   <link rel="stylesheet" href="style.css" />
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-
 <body>
 
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar glass">
+  <div class="sidebar">
     <h2>StudyForge</h2>
-
     <div class="credits-box">
       Credits: <span id="credits">0</span>
     </div>
-
-    <button class="premium-btn">✨ Upgrade to Premium</button>
-    <button class="toggle-btn" onclick="toggleTheme()">Toggle Theme</button>
     <button onclick="logout()">Logout</button>
   </div>
 
-  <!-- MAIN CHAT -->
   <div class="main">
-
     <div id="messages" class="messages"></div>
 
-    <div class="input-box glass">
-      <input 
-        id="input" 
-        placeholder="Ask anything..."
-        autocomplete="off"
-        onkeypress="handleEnter(event)"
-      />
+    <div class="input-box">
+      <input id="messageInput" placeholder="Ask anything..." onkeydown="handleEnter(event)" />
       <button onclick="sendMessage()">Send</button>
     </div>
-
   </div>
 
 </div>
