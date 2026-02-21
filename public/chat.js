@@ -100,7 +100,8 @@ async function sendMessage() {
     fullReply += decoder.decode(value);
 
     // Replace typing dots with streamed text
-aiDiv.textContent = fullReply;
+aiDiv.innerHTML = marked.parse(fullReply);
+hljs.highlightAll();
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
 
