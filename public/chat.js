@@ -40,7 +40,10 @@ async function sendMessage() {
   addMessage("user", message);
   input.value = "";
 
-  const response = await fetch("/chat", {
+  const empty = document.querySelector(".empty-state");
+if (empty) empty.remove();
+const response = await fetch("/chat", {
+  
     method: "POST",
     headers: {
       "Content-Type": "application/json",
