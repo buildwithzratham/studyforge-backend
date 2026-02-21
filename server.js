@@ -59,7 +59,10 @@ app.post("/chat", authMiddleware, async (req, res) => {
     res.setHeader("Transfer-Encoding", "chunked");
 
     let fullReply = "";
-
+    
+res.setHeader("Content-Type", "text/plain");
+res.setHeader("Transfer-Encoding", "chunked");
+    
     for await (const chunk of completion) {
       const content = chunk.choices[0]?.delta?.content || "";
       fullReply += content;
