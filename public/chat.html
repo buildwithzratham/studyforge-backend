@@ -5,42 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>StudyForge</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Markdown + Code Highlight -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js/lib/common.min.js"></script>
-  <link rel="stylesheet"
-   href="https://cdn.jsdelivr.net/npm/highlight.js/styles/github-dark.css">
 </head>
 
 <body>
 
-<div class="app">
+<div class="main">
 
-  <!-- ===== SIDEBAR ===== -->
-  <div class="sidebar glass">
-    <h2>StudyForge</h2>
-    <button onclick="newChat()">+ New Chat</button>
-    <div id="conversationList"></div>
-    <button onclick="logout()">Logout</button>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <span>New chat</span>
   </div>
 
-  <!-- ===== MAIN CHAT AREA ===== -->
-  <div class="main">
-
-    <!-- TOP BAR -->
-    <div class="topbar glass">
-      <span>Credits: <span id="credits">0</span></span>
-      <button onclick="window.location.href='/subscription.html'">
-        Upgrade
-      </button>
+  <!-- Messages -->
+  <div id="messages" class="messages">
+    <div class="empty-state">
+      <h1>How can I help you?</h1>
     </div>
+  </div>
 
-    <!-- MESSAGES -->
-    <div id="messages" class="messages"></div>
+</div>
 
-    <!-- INPUT BAR -->
-   <div class="inputbar">
+<!-- Floating Input -->
+<div class="inputbar">
   <input id="messageInput"
          placeholder="Message or hold to speak"
          onkeypress="if(event.key==='Enter') sendMessage()" />
@@ -51,10 +37,10 @@
       <button class="action-btn">Search</button>
     </div>
 
-    <button class="send-btn" onclick="sendMessage()">➤</button>
+    <button type="button"
+            class="send-btn"
+            onclick="sendMessage()">➤</button>
   </div>
-</div>
-    
 </div>
 
 <script src="chat.js"></script>
