@@ -44,10 +44,12 @@ app.post("/chat", authMiddleware, async (req, res) => {
 
     user.messages.push({ role: "user", content: message });
 
-    const cleanMessages = user.messages.map(m => ({
-      role: m.role,
-      content: m.content
-    }));
+   const cleanMessages = user.messages
+  .slice(-10) // only last 10 messages
+  .map(m => ({
+    role: m.role,
+    content: m.content
+  }));
 
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
@@ -77,7 +79,7 @@ res.setHeader("Transfer-Encoding", "chunked");
     res.end();
 
   } catch (err) {
-    console.error(err);
+   console.error("CHAT ERROR:", err.response?.data || err.message);
     res.status(500).json({ error: "AI failed" });
   }
 });
