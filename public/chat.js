@@ -113,3 +113,5 @@ function logout() {
 }
 
 loadHistory();
+
+document.getElementById("sendBtn").addEventListener("click", sendMessage);
