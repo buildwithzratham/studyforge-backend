@@ -114,4 +114,9 @@ function logout() {
 
 loadHistory();
 
-document.getElementById("sendBtn").addEventListener("click", sendMessage);
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("sendBtn");
+  if (btn) {
+    btn.addEventListener("click", sendMessage);
+  }
+});
