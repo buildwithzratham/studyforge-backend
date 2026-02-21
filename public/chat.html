@@ -40,15 +40,21 @@
     <div id="messages" class="messages"></div>
 
     <!-- INPUT BAR -->
-    <div class="inputbar glass">
-      <input id="messageInput"
-        placeholder="Ask anything..."
-        onkeypress="if(event.key==='Enter') sendMessage()" />
-      <button onclick="sendMessage()">Send</button>
+   <div class="inputbar">
+  <input id="messageInput"
+         placeholder="Message or hold to speak"
+         onkeypress="if(event.key==='Enter') sendMessage()" />
+
+  <div class="input-actions">
+    <div>
+      <button class="action-btn">Think</button>
+      <button class="action-btn">Search</button>
     </div>
 
+    <button class="send-btn" onclick="sendMessage()">➤</button>
   </div>
-
+</div>
+    
 </div>
 
 <script src="chat.js"></script>
