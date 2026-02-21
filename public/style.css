@@ -1,56 +1,16 @@
-/* ===== RESET ===== */
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: #f3f3f5;
   color: #111;
-  height: 100vh;
-  display: flex;
 }
 
-/* ===== LAYOUT ===== */
-.app {
-  display: flex;
-  width: 100%;
-}
-
-/* ===== SIDEBAR (Optional Minimal) ===== */
-.sidebar {
-  width: 220px;
-  background: #ffffff;
-  border-right: 1px solid #e5e5e8;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.sidebar h2 {
-  margin: 0;
-  font-size: 20px;
-}
-
-.sidebar button {
-  background: #f3f3f5;
-  border: none;
-  padding: 10px;
-  border-radius: 14px;
-  cursor: pointer;
-}
-
-/* ===== MAIN AREA ===== */
 .main {
-  flex: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
-/* ===== TOP BAR ===== */
 .topbar {
   height: 60px;
   display: flex;
@@ -58,10 +18,8 @@ body {
   align-items: center;
   font-size: 18px;
   border-bottom: 1px solid #e5e5e8;
-  background: #f3f3f5;
 }
 
-/* ===== CHAT AREA ===== */
 .messages {
   flex: 1;
   overflow-y: auto;
@@ -70,10 +28,9 @@ body {
   margin: 0 auto;
 }
 
-/* ===== TITLE CENTER SCREEN ===== */
 .empty-state {
   text-align: center;
-  margin-top: 100px;
+  margin-top: 120px;
 }
 
 .empty-state h1 {
@@ -81,11 +38,10 @@ body {
   font-weight: 600;
 }
 
-/* ===== MESSAGE BUBBLES ===== */
 .message {
-  margin-bottom: 18px;
-  line-height: 1.6;
+  margin-bottom: 20px;
   font-size: 16px;
+  line-height: 1.6;
 }
 
 .user {
@@ -96,13 +52,12 @@ body {
   text-align: left;
 }
 
-/* ===== FLOATING INPUT DOCK ===== */
 .inputbar {
   position: fixed;
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
+  width: 92%;
   max-width: 700px;
   background: #ffffff;
   border-radius: 28px;
@@ -113,7 +68,6 @@ body {
   gap: 12px;
 }
 
-/* Input field */
 .inputbar input {
   border: none;
   outline: none;
@@ -122,14 +76,12 @@ body {
   background: transparent;
 }
 
-/* Bottom action row */
 .input-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Action buttons */
 .action-btn {
   background: #f3f3f5;
   border: none;
@@ -139,13 +91,12 @@ body {
   cursor: pointer;
 }
 
-/* Send button */
 .send-btn {
   background: #3b6df6;
   color: white;
   border: none;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
 }
