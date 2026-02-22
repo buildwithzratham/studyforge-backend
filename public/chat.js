@@ -1,27 +1,8 @@
 const token = localStorage.getItem("token");
 const messagesDiv = document.getElementById("messages");
-const creditsSpan = document.getElementById("credits");
 
 if (!token) {
   window.location.href = "/login.html";
-}
-
-async function loadHistory() {
-  const res = await fetch("/history", {
-    headers: {
-      Authorization: "Bearer " + token
-    }
-  });
-
-  const data = await res.json();
-
-  creditsSpan.textContent = data.credits;
-
-  messagesDiv.innerHTML = "";
-
-  data.messages.forEach(msg => {
-    addMessage(msg.role, msg.content);
-  });
 }
 
 function addMessage(role, content) {
@@ -40,10 +21,7 @@ async function sendMessage() {
   addMessage("user", message);
   input.value = "";
 
-  const empty = document.querySelector(".empty-state");
-if (empty) empty.remove();
-const response = await fetch("/chat", {
-  
+  const response = await fetch("/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -58,49 +36,22 @@ const response = await fetch("/chat", {
     return;
   }
 
-  // Create typing indicator bubble
   const aiDiv = document.createElement("div");
   aiDiv.classList.add("message", "assistant");
-
-  aiDiv.innerHTML = `
-    <div class="typing">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-  `;
-
   messagesDiv.appendChild(aiDiv);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
-
   let fullReply = "";
 
- while (true) {
-  const { done, value } = await reader.read();
-
-  if (done) {
-    // remove shimmer when finished
-    aiDiv.classList.remove("shimmer");
-
-    aiDiv.textContent = fullReply;
-    break;
-  }
-
-  fullReply += decoder.decode(value);
-
-  // apply shimmer while typing
-  aiDiv.classList.add("shimmer");
-
-  aiDiv.innerHTML = marked.parse(fullReply);
-
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-}
+  while (true) {
+    const { done, value } = await reader.read();
 
     if (done) {
-      // Add Copy Button
+      aiDiv.classList.remove("shimmer");
+      aiDiv.innerHTML = marked.parse(fullReply);
+      if (window.hljs) hljs.highlightAll();
+
       const copyBtn = document.createElement("button");
       copyBtn.textContent = "Copy";
       copyBtn.classList.add("copy-btn");
@@ -120,11 +71,15 @@ const response = await fetch("/chat", {
 
     fullReply += decoder.decode(value);
 
-    // Replace typing dots with streamed text
-aiDiv.textContent = fullReply;
+    aiDiv.classList.add("shimmer");
+    aiDiv.innerHTML = marked.parse(fullReply);
+
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
+}
 
+function newChat() {
+  messagesDiv.innerHTML = "";
 }
 
 function logout() {
@@ -132,15 +87,8 @@ function logout() {
   window.location.href = "/login.html";
 }
 
-loadHistory();
+/* Particle Background */
 
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("sendBtn");
-  if (btn) {
-    btn.addEventListener("click", sendMessage);
-  }
-});
-// Particle background
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -170,17 +118,3 @@ function animateParticles() {
   requestAnimationFrame(animateParticles);
 }
 animateParticles();
-
-function newChat() {
-  const confirmClear = confirm("Start new chat?");
-  if (!confirmClear) return;
-
-  fetch("/clear", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + token
-    }
-  }).then(() => {
-    messagesDiv.innerHTML = "";
-  });
-}
