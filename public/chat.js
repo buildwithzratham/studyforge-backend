@@ -78,8 +78,27 @@ const response = await fetch("/chat", {
 
   let fullReply = "";
 
-  while (true) {
-    const { done, value } = await reader.read();
+ while (true) {
+  const { done, value } = await reader.read();
+
+  if (done) {
+    // remove shimmer when finished
+    aiDiv.classList.remove("shimmer");
+
+    aiDiv.innerHTML = marked.parse(fullReply);
+    hljs.highlightAll();
+    break;
+  }
+
+  fullReply += decoder.decode(value);
+
+  // apply shimmer while typing
+  aiDiv.classList.add("shimmer");
+
+  aiDiv.innerHTML = marked.parse(fullReply);
+
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
     if (done) {
       // Add Copy Button
