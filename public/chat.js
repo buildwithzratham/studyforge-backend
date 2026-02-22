@@ -50,7 +50,6 @@ async function sendMessage() {
     if (done) {
       aiDiv.classList.remove("shimmer");
       aiDiv.innerHTML = marked.parse(fullReply);
-      if (window.hljs) hljs.highlightAll();
 
       const copyBtn = document.createElement("button");
       copyBtn.textContent = "Copy";
