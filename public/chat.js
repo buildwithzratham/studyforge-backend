@@ -152,3 +152,17 @@ function animateParticles() {
   requestAnimationFrame(animateParticles);
 }
 animateParticles();
+
+function newChat() {
+  const confirmClear = confirm("Start new chat?");
+  if (!confirmClear) return;
+
+  fetch("/clear", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token
+    }
+  }).then(() => {
+    messagesDiv.innerHTML = "";
+  });
+}
