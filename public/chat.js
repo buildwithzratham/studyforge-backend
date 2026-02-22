@@ -85,8 +85,7 @@ const response = await fetch("/chat", {
     // remove shimmer when finished
     aiDiv.classList.remove("shimmer");
 
-    aiDiv.innerHTML = marked.parse(fullReply);
-    hljs.highlightAll();
+    aiDiv.textContent = fullReply;
     break;
   }
 
