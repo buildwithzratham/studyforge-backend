@@ -158,5 +158,11 @@ app.get("/admin/users", authMiddleware, async (req, res) => {
 
   res.json(users);
 });
+app.post("/clear", authMiddleware, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  user.messages = [];
+  await user.save();
+  res.json({ success: true });
+});
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log("Server running on " + PORT));
