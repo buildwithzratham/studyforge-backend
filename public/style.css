@@ -68,6 +68,17 @@ body {
   border-radius: 20px;
   line-height: 1.7;
   font-size: 15px;
+
+  /* Fade Animation */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.3s ease forwards;
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .user {
