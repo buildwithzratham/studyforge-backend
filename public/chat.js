@@ -68,10 +68,9 @@ async function sendMessage() {
       break;
     }
 
-    fullReply += decoder.decode(value);
+   fullReply += decoder.decode(value, { stream: true });
 
-    aiDiv.classList.add("shimmer");
-    aiDiv.innerHTML = marked.parse(fullReply);
+    aiDiv.innerHTML = marked.parse(fullReply) + '<span class="typing-cursor"></span>';
 
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
