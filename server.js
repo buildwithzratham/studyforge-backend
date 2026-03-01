@@ -46,13 +46,6 @@ app.post("/chat", authMiddleware, async (req, res) => {
   { role: "user", content: message }
 ];
 
-   const cleanMessages = user.messages
-  .slice(-10) // only last 10 messages
-  .map(m => ({
-    role: m.role,
-    content: m.content
-  }));
-
     const completion = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
       messages: cleanMessages,
