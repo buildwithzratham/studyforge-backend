@@ -1,5 +1,6 @@
 const token = localStorage.getItem("token");
 const messagesDiv = document.getElementById("messages");
+let currentReader = null;
 
 if (!token) {
   window.location.href = "/login.html";
@@ -41,6 +42,7 @@ async function sendMessage() {
   messagesDiv.appendChild(aiDiv);
 
   const reader = response.body.getReader();
+  currentReader = reader;
   const decoder = new TextDecoder();
   let fullReply = "";
 
@@ -67,12 +69,31 @@ async function sendMessage() {
       aiDiv.appendChild(copyBtn);
       break;
     }
+    const regenBtn = document.createElement("button");
+
+aiDiv.appendChild(document.createElement("br"));
+aiDiv.appendChild(regenBtn);
+    
+   regenBtn.textContent = "Regenerate";
+regenBtn.classList.add("copy-btn");
+
+regenBtn.onclick = () => {
+  document.getElementById("messageInput").value = message;
+  sendMessage();
+};
 
    fullReply += decoder.decode(value, { stream: true });
 
     aiDiv.innerHTML = marked.parse(fullReply) + '<span class="typing-cursor"></span>';
 
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    const isNearBottom =
+  messagesDiv.scrollHeight -
+  messagesDiv.scrollTop -
+  messagesDiv.clientHeight < 100;
+
+if (isNearBottom) {
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
   }
 }
 
@@ -116,3 +137,9 @@ function animateParticles() {
   requestAnimationFrame(animateParticles);
 }
 animateParticles();
+
+document.getElementById("stopBtn").onclick = () => {
+  if (currentReader) {
+    currentReader.cancel();
+  }
+};
