@@ -42,7 +42,9 @@ app.post("/chat", authMiddleware, async (req, res) => {
       return res.status(403).json({ error: "No credits left" });
     }
 
-    user.messages.push({ role: "user", content: message });
+    const cleanMessages = [
+  { role: "user", content: message }
+];
 
    const cleanMessages = user.messages
   .slice(-10) // only last 10 messages
